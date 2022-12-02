@@ -7,19 +7,7 @@ import {
 	createStyles,
 	Stack,
 } from '@mantine/core';
-import {
-	TablerIcon,
-	IconHome2,
-	IconGauge,
-	IconDeviceDesktopAnalytics,
-	IconFingerprint,
-	IconCalendarStats,
-	IconUser,
-	IconSettings,
-	IconBellSchool,
-	IconSchool,
-	IconBook2,
-} from '@tabler/icons';
+import { TablerIcon, IconHome2, IconUserCircle } from '@tabler/icons';
 import { ActionToggle } from '../ActionToggle/ActionToggle';
 import Link from 'next/link';
 // import { MantineLogo } from '@mantine/ds';
@@ -86,7 +74,9 @@ function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
 }
 
 const mockdata = [
+	{ icon: IconUserCircle, label: 'Your Profile', link: '/user_profile' },
 	{ icon: IconHome2, label: 'Home', link: '/home' },
+
 	// {
 	// 	icon: IconSchool,
 	// 	label: 'Create University',

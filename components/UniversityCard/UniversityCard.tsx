@@ -10,6 +10,8 @@ import {
 	Title,
 } from '@mantine/core';
 import {
+	IconBooks,
+	IconFileCertificate,
 	IconGasStation,
 	IconGauge,
 	IconManualGearbox,
@@ -63,10 +65,9 @@ const useStyles = createStyles((theme) => ({
 }));
 
 const mockdata = [
-	{ label: '4 passengers', icon: IconUsers },
-	{ label: '100 km/h in 4 seconds', icon: IconGauge },
-	{ label: 'Automatic gearbox', icon: IconManualGearbox },
-	{ label: 'Electric', icon: IconGasStation },
+	{ label: '450 students enrolled', icon: IconUsers },
+	{ label: '12+ Courses offered', icon: IconBooks },
+	{ label: '20+ PHD Prof.', icon: IconFileCertificate },
 ];
 
 interface UniversityCardProps {
@@ -117,8 +118,8 @@ export function UniversityCard({
 			</Card.Section>
 
 			<Card.Section className={classes.section}>
-				<Group spacing={30}>
-					<div>
+				{/* <Group> */}
+				{/* <div>
 						<Text size='xl' weight={700} sx={{ lineHeight: 1 }}>
 							$168.00
 						</Text>
@@ -131,14 +132,25 @@ export function UniversityCard({
 						>
 							per day
 						</Text>
-					</div>
+					</div> */}
 
-					<Link href='/university'>
+				{/* <Link href='/university'>
 						<Button radius='xl' style={{ flex: 1 }} fullWidth>
 							View University
 						</Button>
-					</Link>
-				</Group>
+					</Link> */}
+				{/* </Group> */}
+				<Link href='/university'>
+					<Button
+						radius='xl'
+						variant='outline'
+						style={{ flex: 1 }}
+						fullWidth
+						color='indigo'
+					>
+						View University
+					</Button>
+				</Link>
 			</Card.Section>
 		</Card>
 	);

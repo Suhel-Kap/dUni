@@ -50,16 +50,16 @@ export function CourseCard() {
 			'56 km this month • 17% improvement compared to last month • 443 place in global scoreboard',
 		stats: [
 			{
-				title: 'Distance',
-				value: '27.4 km',
+				title: 'Students Enrolled',
+				value: '785',
 			},
 			{
-				title: 'Avg. speed',
-				value: '9.6 km/h',
+				title: 'Total Hrs.',
+				value: '56 hrs',
 			},
 			{
-				title: 'Score',
-				value: '88/100',
+				title: 'Popularity',
+				value: '8.8/10',
 			},
 		],
 	};

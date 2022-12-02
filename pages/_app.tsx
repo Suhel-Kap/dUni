@@ -34,6 +34,7 @@ const wagmiClient = createClient({
 });
 
 import { useState } from 'react';
+import { NotificationsProvider } from '@mantine/notifications';
 
 export default function App({ Component, pageProps }: AppProps) {
 	const [colorScheme, setColorScheme] = useState<ColorScheme>('light');
@@ -64,7 +65,9 @@ export default function App({ Component, pageProps }: AppProps) {
 								colorScheme,
 							}}
 						>
-							<Component {...pageProps} />
+							<NotificationsProvider>
+								<Component {...pageProps} />
+							</NotificationsProvider>
 						</MantineProvider>
 					</ColorSchemeProvider>
 				</RainbowKitProvider>

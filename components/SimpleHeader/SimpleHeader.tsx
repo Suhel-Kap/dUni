@@ -1,5 +1,6 @@
 import { createStyles, Group, Header, Title } from '@mantine/core';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import Link from 'next/link';
 import { ActionToggle } from '../ActionToggle/ActionToggle';
 
 const useStyles = createStyles((theme) => ({
@@ -27,9 +28,15 @@ export function SimpleHeader() {
 		>
 			<Group position='apart' p={'md'} sx={{ height: '100%' }}>
 				<Group>
-					<Title order={1} className={classes.title} color='white'>
-						dUni
-					</Title>
+					<Link href={'/'}>
+						<Title
+							order={1}
+							className={classes.title}
+							color='white'
+						>
+							dUni
+						</Title>
+					</Link>
 				</Group>
 				<Group>
 					<ConnectButton
