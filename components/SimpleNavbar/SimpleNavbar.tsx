@@ -87,12 +87,12 @@ function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
 
 const mockdata = [
 	{ icon: IconHome2, label: 'Home', link: '/home' },
-	{
-		icon: IconSchool,
-		label: 'Create University',
-		link: '/create-university',
-	},
-	{ icon: IconBook2, label: 'Create Course', link: '/create-course' },
+	// {
+	// 	icon: IconSchool,
+	// 	label: 'Create University',
+	// 	link: '/create-university',
+	// },
+	// { icon: IconBook2, label: 'Create Course', link: '/create-course' },
 	// { icon: IconCalendarStats, label: 'Releases', link: '/' },
 	// { icon: IconUser, label: 'Account', link: '/' },
 	// { icon: IconFingerprint, label: 'Security', link: '/' },

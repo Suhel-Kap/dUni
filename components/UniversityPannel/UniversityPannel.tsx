@@ -1,4 +1,12 @@
-import { Center, Title, Paper, Text, Image, Group } from '@mantine/core';
+import {
+	Center,
+	Title,
+	Paper,
+	Text,
+	Image,
+	Group,
+	Button,
+} from '@mantine/core';
 
 interface UniversityPannelProps {
 	universityName: string;
@@ -12,7 +20,8 @@ import {
 	Skeleton,
 	useMantineTheme,
 } from '@mantine/core';
-import { IconSchool } from '@tabler/icons';
+import { IconBook2, IconSchool } from '@tabler/icons';
+import Link from 'next/link';
 
 const PRIMARY_COL_HEIGHT = 300;
 
@@ -47,10 +56,23 @@ export function UniversityPannel({
 						</Grid.Col>
 					</Grid>
 
-					<Grid gutter='md' mt={60} mx={20}>
+					<Grid gutter='md' mt={0} mx={20} justify='flex-end'>
+						<Link href='/create-course'>
+							<Button
+								variant='outline'
+								color='indigo'
+								radius='lg'
+								size='md'
+								mt={20}
+								leftIcon={<IconBook2 />}
+							>
+								Create Course
+							</Button>
+						</Link>
+
 						<Image
 							height={360}
-							mt={30}
+							mt={20}
 							radius='md'
 							// src='https://images.unsplash.com/photo-1527004013197-933c4bb611b3?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=720&q=80'
 							src={image}

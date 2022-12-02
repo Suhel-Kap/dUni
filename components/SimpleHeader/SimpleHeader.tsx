@@ -28,7 +28,7 @@ export function SimpleHeader() {
 			<Group position='apart' p={'md'} sx={{ height: '100%' }}>
 				<Group>
 					<Title order={1} className={classes.title} color='white'>
-						DUni
+						dUni
 					</Title>
 				</Group>
 				<Group>

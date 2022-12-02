@@ -1,14 +1,32 @@
-import { Center, Grid, Title } from '@mantine/core';
-import { Layout } from '../Components/Layout/Layout';
-import { UniversityCard } from '../Components/UniversityCard/UniversityCard';
+import { Center, Grid, Title, Group, Button } from '@mantine/core';
+import { IconSchool } from '@tabler/icons';
+import Link from 'next/link';
+import { Layout } from '../components/Layout/Layout';
+import { UniversityCard } from '../components/UniversityCard/UniversityCard';
 
 export default function Home() {
 	return (
 		<div>
 			<Layout>
-				<Center mt={10}>
+				<Center>
 					<Title>Universities</Title>
 				</Center>
+
+				<Group position='right'>
+					{/* <Button variant='outline'>1</Button> */}
+					<Link href='/create-course'>
+						<Button
+							variant='outline'
+							color='indigo'
+							radius='lg'
+							size='md'
+							mr={20}
+							leftIcon={<IconSchool />}
+						>
+							Create University
+						</Button>
+					</Link>
+				</Group>
 				<Grid mt={10}>
 					<Grid.Col span={4}>
 						<UniversityCard

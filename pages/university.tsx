@@ -1,10 +1,10 @@
 import { Center, Title, Image, Divider, Text, Paper } from '@mantine/core';
-import { Layout } from '../Components/Layout/Layout';
+import { Layout } from '../components/Layout/Layout';
 import { Tabs } from '@mantine/core';
 import { IconBook, IconSchool, IconUsers } from '@tabler/icons';
-import { UniversityPannel } from '../Components/UniversityPannel/UniversityPannel';
-import { ProffPannel } from '../Components/ProffPannel/ProffPannel';
-import { CoursePannel } from '../Components/CoursePannel/CoursePannel';
+import { UniversityPannel } from '../components/UniversityPannel/UniversityPannel';
+import { ProffPannel } from '../components/ProffPannel/ProffPannel';
+import { CoursePannel } from '../components/CoursePannel/CoursePannel';
 
 export default function Home() {
 	return (

@@ -1,5 +1,5 @@
 import { Grid } from '@mantine/core';
-import { Layout } from '../Components/Layout/Layout';
+import { Layout } from '../components/Layout/Layout';
 
 export default function Home() {
 	return (

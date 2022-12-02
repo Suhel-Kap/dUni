@@ -1,7 +1,7 @@
 import { Container } from '@mantine/core';
 import Head from 'next/head';
-import { CreateUniversity } from '../Components/CreateUniversity/CreateUniversity';
-import { Layout } from '../Components/Layout/Layout';
+import { CreateUniversity } from '../components/CreateUniversity/CreateUniversity';
+import { Layout } from '../components/Layout/Layout';
 
 export default function Home() {
 	return (
