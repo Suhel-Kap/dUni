@@ -67,10 +67,9 @@ export function CreateUser() {
 		}
 		try{
 			const res = await createProfile(form.values.username, address!, signer, `ipfs://${cid}`)
-			console.log("res", res)
-			const profId = await getProfileId(form.values.username)
-			console.log("profId", profId)
-			await addUser(profId)
+			const profId = res.logs[0].topics[3]
+			console.log(`0x${profId.substring(profId.length-4)}`)
+			await addUser(`0x${profId.substring(profId.length-4)}`)
 
 			showNotification({
 				title: 'Profile created',

@@ -6,6 +6,7 @@ import {
     LENS_PROFILE_DETAILS,
     LENS_PROFILE_EXISTS
 } from "../constants/graphql/queries";
+import {useProvider} from "wagmi";
 
 const APIURL = 'https://api-mumbai.lens.dev/';
 
@@ -15,6 +16,7 @@ const apolloClient = new ApolloClient({
 })
 
 export default function useLens() {
+    const provider = useProvider()
     const login = async (address: `0x${string}`, signer: any) => {
         const response = await apolloClient.query({
             query: gql(CHALLENGE_QUERY),
@@ -66,7 +68,10 @@ export default function useLens() {
             }
         })
         console.log("createProfRes", createProfRes)
-        return createProfRes
+        const txHash = createProfRes.data.createProfile.txHash
+        const txReceipt = await provider.waitForTransaction(txHash)
+        console.log("txReceipt", txReceipt)
+        return txReceipt
     }
 
     const profileExists = async (handle: string) =>{

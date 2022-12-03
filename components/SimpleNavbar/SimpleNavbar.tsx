@@ -78,7 +78,6 @@ export function SimpleNavbar() {
 	const { classes, cx } = useStyles();
 	const { address } = useAccount();
 	const router = useRouter();
-	console.log("router", router);
 	const mockdata = [
 		{
 			icon: IconUserCircle,
