@@ -16,16 +16,14 @@ export const CREATE_PROFILE_MUTATION = `mutation CreateProfile($username: Create
 
 export const LENS_PROFILE_EXISTS = "query AccountExists ($name:Handle){profile(request: {handle: $name}) {id}}"
 
-export const LENS_PROFILE_DETAILS = `query DefaultProfile($addr: EthereumAddress!) {
-  defaultProfile(request: { ethereumAddress: $addr}) {
+export const LENS_PROFILE_DETAILS = `query Profile ($id:ProfileId!) {
+  profile(request: { profileId: $id}) {
     id
-    handle
     picture {
       ... on NftImage {
         contractAddress
         tokenId
         uri
-        chainId
         verified
       }
       ... on MediaSet {
@@ -34,7 +32,9 @@ export const LENS_PROFILE_DETAILS = `query DefaultProfile($addr: EthereumAddress
           mimeType
         }
       }
+      __typename
     }
+    handle
     ownedBy
   }
 }`

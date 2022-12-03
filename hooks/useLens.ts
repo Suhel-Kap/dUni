@@ -101,14 +101,14 @@ export default function useLens() {
         return response.data.profile.id
     }
 
-    const getProfile = async (address: string) => {
+    const getProfile = async (hex: string) => {
         const response = await apolloClient.query({
             query: gql(LENS_PROFILE_DETAILS),
             variables: {
-                addr: address
+                id: hex
             }
         })
-        return response.data.defaultProfile
+        return response.data.profile
     }
 
     return {

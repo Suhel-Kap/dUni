@@ -16,6 +16,7 @@ import {useEffect, useState} from 'react';
 import { CreateUser } from '../CreateUser/CreateUser';
 import {useAccount} from "wagmi";
 import useLens from "../../hooks/useLens";
+import { useContract } from '../../hooks/useContract';
 
 const useStyles = createStyles((theme) => ({
 	card: {
@@ -51,6 +52,7 @@ export function Banner({
 	const [opened, setOpened] = useState(false);
 	const {address, isConnected, isDisconnected, status} = useAccount();
 	const {getProfile} = useLens()
+	const {getAccountHex} = useContract()
 
 	const router = useRouter();
 	useEffect(() => {
@@ -63,7 +65,10 @@ export function Banner({
 			return
 		}
 		const fetchProfile = async () => {
-			const res = await getProfile(router.query.address as string)
+			const prof = await getAccountHex(router.query.address as string)
+			if(prof == '') return
+			console.log("prof",prof)
+			const res = await getProfile(prof as string)
 			console.log("res", res)
 			setStats(res)
 		}
@@ -72,7 +77,7 @@ export function Banner({
 	return (
 		<Card p='xl' className={classes.card}>
 			<Avatar
-				src={stats?.picture}
+				src={stats?.picture.original.url.replace("ipfs://", "https://") + ".ipfs.nftstorage.link"}
 				size={160}
 				radius={80}
 				m='auto'
