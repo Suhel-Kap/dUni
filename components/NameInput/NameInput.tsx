@@ -63,6 +63,7 @@ export function NameInput(props: NameInputProps) {
 
 		const timeout = setTimeout(() => {
 			console.log('query', query);
+			if (!query) return;
 			client
 				// @ts-ignore
 				.query(query)
