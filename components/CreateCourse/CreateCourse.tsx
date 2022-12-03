@@ -128,21 +128,31 @@ export function CreateCourse({universityId}:any) {
 				image: imageCid,
 			})
 			
-			const res = await createCourse(universityId, form.values.projectName, members, form.values.price, fileId, playbackId, streamId);
-			
-			console.log(res)
-			showNotification({
-				title: 'Course Created',
-				message: 'Your course has been created',
-			})
-			setLoading(false)
-			router.push("/university?id="+universityId)
-			console.log('submit');
+			const id = router.query.id
+			if (typeof id === "string") {
+				const res = await createCourse(parseInt(id), form.values.projectName, finMembers, form.values.price.toString(), fileId, playbackId, streamId);
+				
+				console.log(res)
+				showNotification({
+					title: 'Course Created',
+					message: 'Your course has been created',
+				})
+				setLoading(false)
+				router.push("/university?id="+universityId)
+				console.log('submit');
+			}else{
+				console.log("university id is not passed in query params")
+				showNotification({
+					title: 'Error',
+					message: 'There was an error creating your course',
+				})
+				setLoading(false)
+			}
 		} catch (error) {
 			console.log(error);
 			showNotification({
 				title: 'Error',
-				message: 'There was an error creating your university',
+				message: 'There was an error creating your course',
 			})
 			setLoading(false)
 		}
