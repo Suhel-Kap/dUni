@@ -66,6 +66,7 @@ export default function useLens() {
             }
         })
         console.log("createProfRes", createProfRes)
+        return createProfRes
     }
 
     const profileExists = async (handle: string) =>{

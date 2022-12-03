@@ -19,11 +19,13 @@ import useNftStorage from "../../hooks/useNftStorage";
 import useLens from "../../hooks/useLens";
 import {useAccount, useSigner} from "wagmi";
 import {useRouter} from "next/router";
+import { useContract } from '../../hooks/useContract';
 
 export function CreateUser() {
 	const [image, setImage] = useState<File>();
 	const {uploadImage,uploadText} = useNftStorage()
-	const {createProfile, profileExists, login} = useLens()
+	const {addUser} = useContract()
+	const {createProfile, profileExists, getProfileId} = useLens()
 	const {address} = useAccount()
 	const [loading, setLoading] = useState(false);
 	const {data: signer} = useSigner()
@@ -55,6 +57,7 @@ export function CreateUser() {
 				color: 'red',
 				icon: <IconAlertCircle />,
 			});
+			setLoading(false)
 			return
 		}
 
@@ -63,8 +66,12 @@ export function CreateUser() {
 			cid = await uploadImage(image)
 		}
 		try{
-			// await login(address!, signer)
-			await createProfile(form.values.username, address!, signer, `ipfs://${cid}`)
+			const res = await createProfile(form.values.username, address!, signer, `ipfs://${cid}`)
+			console.log("res", res)
+			const profId = await getProfileId(form.values.username)
+			console.log("profId", profId)
+			await addUser(profId)
+
 			showNotification({
 				title: 'Profile created',
 				message: 'Your profile has been created',

@@ -22,7 +22,7 @@ export const schema = z.object({
 			message: 'Display name should not be longer than 32 characters',
 		}),
 	website: z.string(),
-	description: z.string().max(100, {
-		message: 'Description should be shorter than 100 characters',
+	description: z.string().max(500, {
+		message: 'Description should be shorter than 500 characters',
 	}),
 });

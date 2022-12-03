@@ -105,7 +105,7 @@ export function UniversityCard({
 						{data.name}
 					</Title>
 					<Text size='md' color='dimmed'>
-						{data.description}
+						{data.description.slice(0, 100)}...
 					</Text>
 				</div>
 			</Group>

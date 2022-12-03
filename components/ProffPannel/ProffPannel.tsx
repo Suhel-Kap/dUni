@@ -47,6 +47,7 @@ export function ProffPannel(props: UsersStackProps) {
         },
     ];
     let rows
+    console.log(props.admins)
     if (props.admins) {
         rows = props.admins.map((item) => (
             <tr key={item}>
