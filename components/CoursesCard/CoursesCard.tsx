@@ -12,6 +12,8 @@ import {
 } from '@mantine/core';
 import { IconCurrencyEthereum, IconShoppingCartPlus } from '@tabler/icons';
 import Link from 'next/link';
+import { useContract } from '../../hooks/useContract';
+import {useEffect, useState} from "react";
 
 const useStyles = createStyles((theme) => ({
 	card: {
@@ -48,8 +50,18 @@ interface CardWithStatsProps {
 
 export function CourseCard(props: any) {
 	const { classes } = useStyles()
-
-	console.log("CourseCard", props)
+	const {getCourse} = useContract()
+	const [data, setData] = useState<any>([])
+	useEffect(() => {
+		const getCourseData = async () => {
+			const course = await getCourse(props.id)
+			const data = await fetch(`https://${course[1]}.ipfs.nftstorage.link`)
+			const json = await data.json()
+			setData(json)
+		}
+		getCourseData()
+	}, [props])
+	console.log("CourseCard", data)
 
 	const mockData = {
 		image: 'https://images.unsplash.com/photo-1581889470536-467bdbe30cd0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=720&q=80',
@@ -81,13 +93,13 @@ export function CourseCard(props: any) {
 	return (
 		<Card withBorder p='lg' className={classes.card} radius='lg'>
 			<Card.Section>
-				<Image src={mockData.image} alt={mockData.title} height={200} />
+				<Image src={`https://${data.image}.ipfs.nftstorage.link`} alt={data.name} height={200} />
 			</Card.Section>
 
 			<Group position='apart' mt='xl'>
 				<Link href={`/view-course?id=${props.id}`}>
 					<Text size='xl' weight={700} className={classes.title}>
-						{mockData.title}
+						{data.name}
 					</Text>
 				</Link>
 				<Group>
@@ -97,10 +109,9 @@ export function CourseCard(props: any) {
 				</Group>
 			</Group>
 			<Text mt='xl' mb='xl' color='dimmed' size='md'>
-				{mockData.description}
+				{data.shortDescription}
 			</Text>
 			<Card.Section>
-				{/* <Button mb={10}>Enroll the Course</Button> */}
 				<Center>
 					<Button
 						variant='subtle'
