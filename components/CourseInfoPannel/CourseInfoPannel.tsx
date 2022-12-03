@@ -29,7 +29,7 @@ export function CourseInfoPannel({
 }: CourseInfoPannelProps) {
 	const theme = useMantineTheme();
 	const [opened, setOpened] = useState(false);
-	const {getStream} = useContract()
+	const {getStreamKey} = useContract()
 	const router = useRouter()
 	const [streamKey, setStreamKey] = useState(null);
 
@@ -37,7 +37,7 @@ export function CourseInfoPannel({
 		(async() => {
 			const id = router.query.id
 			if (typeof id === "string") {
-				const key = await getStream(parseInt(id))
+				const key = await getStreamKey(parseInt(id))
 				setStreamKey(key)
 			}
 		})()
