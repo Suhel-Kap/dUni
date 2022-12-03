@@ -290,7 +290,7 @@ export function Banner({
 									// optIn();
 								}}
 							>
-								Opt In To EPNS Notification Channel
+								Edit Profile
 							</Button>
 						</Button.Group>
 					</Center>

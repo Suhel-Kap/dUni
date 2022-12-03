@@ -7,3 +7,9 @@ export const fetchOrganisationDetails = "query GetOrg($accHex: String){ account(
 export const fetchProjectDetails = "query GetProj ($projId: String){ project(id: $projId){ id name metaURI members{ id } releases {id name metaURI }}}"
 
 export const ACCOUNTS_SEARCH__QUERY = "\n query AccountSearch($search: String){\n accounts(where:{name_contains: $search}){\n id\n name\n metaURI\n }\n }\n"
+
+export const CHALLENGE_QUERY = `query Challenge ($address: EthereumAddress!) {challenge(request: { address: $address }){text}}`
+
+export const AUTHENTICATE_MUTATION = `mutation Authenticate ($address: EthereumAddress!, $signature:Signature!) {authenticate(request: {address: $address signature: $signature}){accessToken refreshToken}}`
+
+export const CREATE_PROFILE_MUTATION = `mutation CreateProfile($username: CreateHandle!, $img:Url) {createProfile(request:{ handle: $username,profilePictureUri: $img,followModule: {freeFollowModule: true}}) {... on RelayerResult {txHash}... on RelayError {reason}__typename}}`
