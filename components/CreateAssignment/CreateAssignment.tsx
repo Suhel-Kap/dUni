@@ -40,10 +40,10 @@ export function CreateAssignment() {
 				name: form.values.assignmentName,
 				description: form.values.description
 			})
+			console.log(fileId)
 			const id = router.query.id
 			if (typeof id === "string") {
 				const res = await addAssignment(parseInt(id), fileId)
-				
 				console.log(res)
 				showNotification({
 					title: 'Assignment Created',
@@ -106,7 +106,7 @@ export function CreateAssignment() {
 						placeholder='Add your assignment discription'
 						{...form.getInputProps('description')}
 					/>
-					<Button onClick={()=>{}} mt={20}>Submit</Button>
+					<Button onClick={()=>{onSubmit()}} mt={20}>Submit</Button>
 				</Paper>
 			</Center>
 		</div>
