@@ -1,5 +1,10 @@
 import {ApolloClient, ApolloLink, gql, HttpLink, InMemoryCache} from '@apollo/client'
-import {AUTHENTICATE_MUTATION, CHALLENGE_QUERY, CREATE_PROFILE_MUTATION} from "../constants/graphql/queries";
+import {
+    AUTHENTICATE_MUTATION,
+    CHALLENGE_QUERY,
+    CREATE_PROFILE_MUTATION, LENS_PROFILE_DETAILS,
+    LENS_PROFILE_EXISTS
+} from "../constants/graphql/queries";
 
 const APIURL = 'https://api-mumbai.lens.dev/';
 
@@ -57,14 +62,54 @@ export default function useLens() {
             mutation: gql(CREATE_PROFILE_MUTATION),
             variables: {
                 username: username,
-                img: pfp
+                img: pfp,
             }
         })
         console.log("createProfRes", createProfRes)
     }
 
+    const profileExists = async (handle: string) =>{
+        console.log("handle", handle)
+        const response = await apolloClient.query({
+            query: gql(LENS_PROFILE_EXISTS),
+            variables: {
+                name: `${handle}.test`
+            }
+        })
+        console.log("profileExists", response)
+        let exists = false
+        if(response.data.profile !== null){
+            exists = true
+        }
+        return exists
+    }
+
+    const getProfileId = async (handle: string) =>{
+        console.log("handle", handle)
+        const response = await apolloClient.query({
+            query: gql(LENS_PROFILE_EXISTS),
+            variables: {
+                name: `${handle}.test`
+            }
+        })
+        return response.data.profile.id
+    }
+
+    const getProfile = async (address: string) => {
+        const response = await apolloClient.query({
+            query: gql(LENS_PROFILE_DETAILS),
+            variables: {
+                addr: address
+            }
+        })
+        return response.data.defaultProfile
+    }
+
     return {
         login,
-        createProfile
+        createProfile,
+        profileExists,
+        getProfileId,
+        getProfile
     }
 }

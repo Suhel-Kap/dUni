@@ -8,13 +8,13 @@ import { KeyboardEvent } from 'react';
 const isENS = (address: string) => address.endsWith('.eth');
 const isAddress = (address: string) => ethers.utils.isAddress(address);
 
-// export interface AddressProps {
-// 	onSubmit: (address: string) => void;
-// 	disabled?: boolean;
-// }
+export interface AddressProps {
+	onSubmit: (address:`0x${string}`) => void;
+	disabled?: boolean;
+}
 
-export function AddressInput() {
-	const [value, setValue] = useState('');
+export function AddressInput(props: AddressProps) {
+	const [value, setValue] = useState<string>("");
 	const [error, setError] = useState('');
 
 	const { data, isLoading } = useEnsAddress({
@@ -37,11 +37,14 @@ export function AddressInput() {
 	}, [value, isLoading, isValid]);
 
 	const submit = (event: KeyboardEvent<HTMLElement>) => {
+		console.log("data", data);
+		console.log("value", value);
 		if (event.key !== 'Enter') return;
 		event.preventDefault();
 
 		if (isLoading || !isValid) return;
-		// props.onSubmit(data ?? value);
+		// @ts-ignore
+		props.onSubmit(data ?? value);
 		setValue('');
 	};
 
@@ -62,7 +65,8 @@ export function AddressInput() {
 				style={{ width: 150 }}
 				onClick={(e: KeyboardEvent<HTMLElement>) => {
 					if (isLoading || !isValid) return;
-					// props.onSubmit(data ?? value);
+					// @ts-ignore
+					props.onSubmit(data ?? value);
 					setValue('');
 				}}
 			>

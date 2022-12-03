@@ -20,11 +20,13 @@ import { AddressInput } from '../AddressInput/AddressInput';
 import { MemberList } from '../MemberList/MemberList';
 import { useListState } from '@mantine/hooks';
 import { schema } from './Schema';
+import {useAccount} from "wagmi";
 
 export function CreateUniversity() {
 	const [active, setActive] = useState(0);
 	const [image, setImage] = useState<File>();
-	const [members, membersHandlers] = useListState<string>([]);
+	const [members, membersHandlers] = useListState<`0x${string}`>([]);
+	const {address} = useAccount()
 
 	const form = useForm({
 		validate: zodResolver(schema),
@@ -37,6 +39,17 @@ export function CreateUniversity() {
 		},
 	});
 
+	const removeMember = (member: `0x${string}`) => {
+		membersHandlers.filter(
+			(other: string) => other.toLowerCase() !== member.toLowerCase()
+		);
+	};
+
+	const addMember = (member: `0x${string}`) => {
+		removeMember(member);
+		membersHandlers.append(member);
+	};
+
 	const nextStep = () =>
 		setActive((current) => {
 			if (form.validate().hasErrors) {
@@ -48,7 +61,9 @@ export function CreateUniversity() {
 	const prevStep = () =>
 		setActive((current) => (current > 0 ? current - 1 : current));
 
-	const handleSubmit = () => {};
+	const handleSubmit = async () => {
+		addMember(address!);
+	};
 
 	return (
 		<>
@@ -135,21 +150,21 @@ export function CreateUniversity() {
 							<List.Item>Publish new releases</List.Item>
 						</List>
 						<Title order={2}>Account Admins</Title>
-						<AddressInput /*onSubmit={addMember}*/ />
+						<AddressInput onSubmit={addMember} />
 						<MemberList
 							label='Account Admin'
 							members={members}
 							editable={true}
-							// onRemove={removeMember}
+							onRemove={removeMember}
 						/>
 					</Stack>
 				</Stepper.Step>
 				<Stepper.Completed>
 					Completed! Form values:
-					{/* <Code block mt='xl'>
+					<Code block mt='xl'>
 						{JSON.stringify(form.values, null, 2)}
 						{JSON.stringify(members, null, 2)}
-					</Code> */}
+					</Code>
 				</Stepper.Completed>
 			</Stepper>
 

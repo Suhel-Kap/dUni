@@ -33,24 +33,24 @@ export function NavTabs({
 	}, [isPostCountFetched]);
 	console.log(posts);
 
-	const postCards = posts.map((post, index) => {
-		return (
-			<Grid.Col key={index} lg={4} md={6}>
-				<Skeleton visible={isLoading} animate={true}>
-					<Container size={400} px='xs'>
-						<PostCard
-							footer={`${Math.floor(
-								Math.random() * 11
-							)} people liked this post`}
-							image={post.image}
-							title={post.title}
-							description={post.description}
-						/>
-					</Container>
-				</Skeleton>
-			</Grid.Col>
-		);
-	});
+	// const postCards = posts.map((post, index) => {
+	// 	return (
+	// 		<Grid.Col key={index} lg={4} md={6}>
+	// 			<Skeleton visible={isLoading} animate={true}>
+	// 				<Container size={400} px='xs'>
+	// 					<PostCard
+	// 						footer={`${Math.floor(
+	// 							Math.random() * 11
+	// 						)} people liked this post`}
+	// 						image={post.image}
+	// 						title={post.title}
+	// 						description={post.description}
+	// 					/>
+	// 				</Container>
+	// 			</Skeleton>
+	// 		</Grid.Col>
+	// 	);
+	// });
 
 	const initializePosts = async () => {
 		for (let i = 1; i <= postCount; i++) {
@@ -92,7 +92,7 @@ export function NavTabs({
 			<Tabs.Panel value={'first'}>
 				<Paper shadow='xl' radius='lg' p='md' pt={'lg'}>
 					<Grid>
-						{postCards}
+						{/*{postCards}*/}
 						{posts.length === 0 && (
 							<Title order={3}>This user is yet to post</Title>
 						)}

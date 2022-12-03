@@ -12,4 +12,29 @@ export const CHALLENGE_QUERY = `query Challenge ($address: EthereumAddress!) {ch
 
 export const AUTHENTICATE_MUTATION = `mutation Authenticate ($address: EthereumAddress!, $signature:Signature!) {authenticate(request: {address: $address signature: $signature}){accessToken refreshToken}}`
 
-export const CREATE_PROFILE_MUTATION = `mutation CreateProfile($username: CreateHandle!, $img:Url) {createProfile(request:{ handle: $username,profilePictureUri: $img,followModule: {freeFollowModule: true}}) {... on RelayerResult {txHash}... on RelayError {reason}__typename}}`
+export const CREATE_PROFILE_MUTATION = `mutation CreateProfile($username: CreateHandle!, $img:Url) {createProfile(request:{ handle: $username,profilePictureUri: $img, followModule: {freeFollowModule: true}}) {... on RelayerResult {txHash}... on RelayError {reason}__typename}}`
+
+export const LENS_PROFILE_EXISTS = "query AccountExists ($name:Handle){profile(request: {handle: $name}) {id}}"
+
+export const LENS_PROFILE_DETAILS = `query DefaultProfile($addr: EthereumAddress!) {
+  defaultProfile(request: { ethereumAddress: $addr}) {
+    id
+    handle
+    picture {
+      ... on NftImage {
+        contractAddress
+        tokenId
+        uri
+        chainId
+        verified
+      }
+      ... on MediaSet {
+        original {
+          url
+          mimeType
+        }
+      }
+    }
+    ownedBy
+  }
+}`
