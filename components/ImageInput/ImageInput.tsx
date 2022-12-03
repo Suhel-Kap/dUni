@@ -23,22 +23,19 @@ export function ImageInput(props: ImageInputProps) {
 			setSrc(URL.createObjectURL(props.value));
 		} else if (props.value) {
 			setSrc(props.value as string);
-		} else {
-			setSrc(null);
 		}
 	}, [props.value]);
 
 	const onDrop = (files: File[]) => {
 		if (files.length > 0) {
 			props.onChange(files[0]);
-		} else {
-			props.onChange(null);
 		}
 	};
 
 	return (
 		<AspectRatio
 			ref={ref}
+			// @ts-ignore
 			ratio={props.width / props.height}
 			style={{ maxWidth: props.width }}
 		>

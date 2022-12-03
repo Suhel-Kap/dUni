@@ -24,7 +24,6 @@ import {
 } from '@tabler/icons';
 import { useState } from 'react';
 import { AddressInput } from '../AddressInput/AddressInput';
-import { GalleryInput } from '../GalleryInput/GalleryInput';
 import { ImageInput } from '../ImageInput/ImageInput';
 import { MemberList } from '../MemberList/MemberList';
 import { NameInput } from '../NameInput/NameInput';
@@ -35,7 +34,7 @@ export function CreateCourse() {
 	const [image, setImage] = useState<File>();
 	const [mainCapsule, setMainCapsule] = useState<File>();
 	const [gallery, setGallery] = useState<File[]>([]);
-	const [members, membersHandlers] = useListState<string>([]);
+	const [members, membersHandlers] = useListState<`0x${string}`>([]);
 
 	const defaultTypes = ['web', 'native', 'cli'];
 
@@ -64,6 +63,17 @@ export function CreateCourse() {
 			price: 0,
 		},
 	});
+
+	const removeMember = (member: `0x${string}`) => {
+		membersHandlers.filter(
+			(other: string) => other.toLowerCase() !== member.toLowerCase()
+		);
+	};
+
+	const addMember = (member: `0x${string}`) => {
+		removeMember(member);
+		membersHandlers.append(member);
+	};
 
 	const nextStep = () =>
 		setActive((current) => {
@@ -219,45 +229,13 @@ export function CreateCourse() {
 							<List.Item>Publish new releases</List.Item>
 						</List>
 						<Title order={2}>Project Member</Title>
-						<AddressInput /* onSubmit={addMember} */ />
+						<AddressInput onSubmit={addMember} />
 						<MemberList
 							label='Project Member'
 							members={members}
 							editable={true}
-							// onRemove={removeMember}
+							onRemove={removeMember}
 						/>
-					</Stack>
-				</Stepper.Step>
-
-				<Stepper.Step label='Media'>
-					<Stack style={{ maxWidth: 784 }}>
-						<Title mt='lg'>Media</Title>
-						<Text color='dimmed'>
-							Show your course with videos and images.
-						</Text>
-						<Title order={2}>YouTube Link</Title>
-						<Text color='dimmed'>Paste a link to your video.</Text>
-						<TextInput
-							label='YouTube Link'
-							{...form.getInputProps('youTubeLink')}
-						/>
-						<Title order={2}>Header Image</Title>
-						<Text color='dimmed'>
-							This can be the cover image of your course.
-							Recommended size is (616x353).
-						</Text>
-						<ImageInput
-							width={616}
-							height={353}
-							onChange={setMainCapsule}
-							value={mainCapsule}
-						/>
-						<Title order={2}>Gallery Images</Title>
-						<Text color='dimmed'>
-							Additional images of your course. Recommended size
-							is (1280x720 or 1920x1080).
-						</Text>
-						<GalleryInput onChange={setGallery} value={gallery} />
 					</Stack>
 				</Stepper.Step>
 
