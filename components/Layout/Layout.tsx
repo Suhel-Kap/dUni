@@ -13,11 +13,7 @@ export function Layout({ children }: Props) {
 			padding='md'
 			header={<SimpleHeader />}
 			navbar={<SimpleNavbar />}
-			// footer={
-			// 	<Footer height={50} p='sm'>
-			// 		All rights reserved.
-			// 	</Footer>
-			// }
+			// footer={}
 		>
 			{children}
 		</AppShell>

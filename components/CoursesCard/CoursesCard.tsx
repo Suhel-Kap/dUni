@@ -5,7 +5,12 @@ import {
 	Text,
 	Group,
 	RingProgress,
+	Button,
+	Center,
+	Badge,
+	ActionIcon,
 } from '@mantine/core';
+import { IconCurrencyEthereum, IconShoppingCartPlus } from '@tabler/icons';
 
 const useStyles = createStyles((theme) => ({
 	card: {
@@ -75,6 +80,12 @@ export function CourseCard() {
 		</div>
 	));
 
+	const etherIcon = (
+		<ActionIcon size='xs' color='blue' radius='xl' variant='transparent'>
+			<IconCurrencyEthereum color='green' />
+		</ActionIcon>
+	);
+
 	return (
 		<Card withBorder p='lg' className={classes.card} radius='lg'>
 			<Card.Section>
@@ -85,20 +96,35 @@ export function CourseCard() {
 				<Text size='xl' weight={700} className={classes.title}>
 					{mockData.title}
 				</Text>
-				<Group spacing={5}>
-					<Text size='xs' color='dimmed'>
-						80% completed
-					</Text>
-					<RingProgress
+				<Group>
+					<Badge size='lg' color='lime' leftSection={etherIcon}>
+						Price : 1350
+					</Badge>
+					{/* <RingProgress
 						size={18}
 						sections={[{ value: 80, color: 'blue' }]}
-					/>
+					/> */}
 				</Group>
 			</Group>
 			<Text mt='xl' mb='xl' color='dimmed' size='md'>
 				{mockData.description}
 			</Text>
 			<Card.Section className={classes.footer}>{items}</Card.Section>
+			<Card.Section>
+				{/* <Button mb={10}>Enroll the Course</Button> */}
+				<Center>
+					<Button
+						variant='subtle'
+						color='indigo'
+						size='md'
+						mt={10}
+						leftIcon={<IconShoppingCartPlus />}
+						fullWidth
+					>
+						Enroll in the course
+					</Button>
+				</Center>
+			</Card.Section>
 		</Card>
 	);
 }

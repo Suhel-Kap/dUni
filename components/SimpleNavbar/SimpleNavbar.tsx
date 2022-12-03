@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
 	Navbar,
 	Center,
@@ -10,6 +10,7 @@ import {
 import { TablerIcon, IconHome2, IconUserCircle } from '@tabler/icons';
 import { ActionToggle } from '../ActionToggle/ActionToggle';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 // import { MantineLogo } from '@mantine/ds';
 
 const useStyles = createStyles((theme) => ({
@@ -90,8 +91,16 @@ const mockdata = [
 ];
 
 export function SimpleNavbar() {
+	const router = useRouter();
 	const [active, setActive] = useState(0);
 	const { classes, cx } = useStyles();
+
+	useEffect(() => {
+		const index = mockdata.findIndex(
+			(item) => item.link === router.pathname
+		);
+		setActive(index);
+	}, []);
 
 	const links = mockdata.map((link, index) => (
 		<Link href={link.link}>

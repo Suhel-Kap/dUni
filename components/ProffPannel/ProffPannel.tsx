@@ -76,7 +76,7 @@ export function ProffPannel() {
 				<Text size='sm'>{item.description}</Text>
 			</td>
 
-			<td>
+			{/* <td>
 				<Group spacing={0} position='right'>
 					<ActionIcon>
 						<IconPencil size={16} stroke={1.5} />
@@ -117,7 +117,7 @@ export function ProffPannel() {
 						</Menu.Dropdown>
 					</Menu>
 				</Group>
-			</td>
+			</td> */}
 		</tr>
 	));
 

@@ -13,10 +13,15 @@ import {
 	Textarea,
 	List,
 	Code,
+	NumberInput,
 } from '@mantine/core';
 import { useForm, zodResolver } from '@mantine/form';
 import { useListState } from '@mantine/hooks';
-import { IconAlertCircle, IconWorldWww } from '@tabler/icons';
+import {
+	IconAlertCircle,
+	IconCurrencyEthereum,
+	IconWorldWww,
+} from '@tabler/icons';
 import { useState } from 'react';
 import { AddressInput } from '../AddressInput/AddressInput';
 import { GalleryInput } from '../GalleryInput/GalleryInput';
@@ -55,15 +60,16 @@ export function CreateCourse() {
 			shortDescription: '',
 			youTubeLink: '',
 			tags: [],
-			type: '',
+			// type: '',
+			price: 0,
 		},
 	});
 
 	const nextStep = () =>
 		setActive((current) => {
-			if (form.validate().hasErrors) {
-				return current;
-			}
+			// if (form.validate().hasErrors) {
+			// 	return current;
+			// }
 			return current < 4 ? current + 1 : current;
 		});
 
@@ -132,7 +138,7 @@ export function CreateCourse() {
 							</Tooltip>
 						}
 					/>
-					<Title my={'sm'} order={4}>
+					{/* <Title my={'sm'} order={4}>
 						Type
 					</Title>
 					<Select
@@ -144,7 +150,20 @@ export function CreateCourse() {
 						creatable
 						getCreateLabel={(query) => `+ Create ${query}`}
 						{...form.getInputProps('type')}
+					/> */}
+					<Title my={'sm'} order={4}>
+						Price
+					</Title>
+					<NumberInput
+						defaultValue={0.05}
+						precision={2}
+						min={0}
+						step={0.01}
+						// max={}
+						icon={<IconCurrencyEthereum />}
+						{...form.getInputProps('price')}
 					/>
+
 					<Title my={'sm'} order={4}>
 						Tags
 					</Title>
