@@ -5,10 +5,32 @@ import { UniversityPannel } from '../components/UniversityPannel/UniversityPanne
 import { ProffPannel } from '../components/ProffPannel/ProffPannel';
 import { CoursePannel } from '../components/CoursePannel/CoursePannel';
 import { Chat } from '@pushprotocol/uiweb';
-import { useAccount } from 'wagmi';
+import {useAccount, useSigner} from 'wagmi';
+import {useRouter} from "next/router";
+import {useContract} from "../hooks/useContract";
+import {useEffect, useState} from "react";
 
 export default function University() {
 	const { address } = useAccount();
+	const {data: signer} = useSigner()
+	const { getUniversity } = useContract()
+	const [data, setData] = useState<any>()
+	const [admins, setAdmins] = useState<any>(["0x0000000000000000000000000000000000000000"])
+	const router = useRouter()
+	useEffect(() => {
+		if(!signer) return
+		let id = router.query.id
+		const getUni = async () => {
+			if (typeof id === "string") {
+				const uni = await getUniversity(parseInt(id))
+				const data = await fetch(`https://${uni[1]}.ipfs.nftstorage.link`)
+				const json = await data.json()
+				setData(json)
+				setAdmins(uni[0])
+			}
+		}
+		getUni()
+	}, [signer, router.query, router.isReady])
 
 	return (
 		<div>
@@ -28,18 +50,14 @@ export default function University() {
 
 					<Tabs.Panel value='first'>
 						<UniversityPannel
-							universityName={'Sarvajanik University'}
-							image={
-								'https://images.unsplash.com/photo-1527004013197-933c4bb611b3?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=720&q=80'
-							}
-							description={
-								'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quidem, quibusdam iste assumenda quis nulla minima voluptatem, eius fuga tempore vitae a soluta nobis adipisci. Commodi nobis eos magnam minus modi! Ex deserunt deleniti consequuntur illo nam! Provident commodi dolorum sed quaerat debitis tempore vero ipsam maiores veritatis facilis, doloribus non odio, aut quasi in suscipit inventore eius ex necessitatibus repellat. Exercitationem voluptates sint expedita cumque quidem ipsa veniam fugit quam ducimus, beatae voluptatum alias? Deleniti molestias recusandae nesciunt culpa blanditiis cupiditate corporis facilis eius laborum, est nisi maiores nulla esse! Impedit quia quo illum ut repellendus beatae nisi quisquam placeat reiciendis cum vitae quod vero ducimus illo fugiat laborum, ratione eligendi aliquam est ipsam provident accusamus? Animi voluptas explicabo fugit. Alias illum cum cupiditate sapiente? Facere iure laboriosam animi vero ea facilis sapiente sed reiciendis cumque minima? Error, ratione dolor quasi, et magni ipsa itaque quo nesciunt voluptas, voluptatem necessitatibus.'
-							}
+							universityName={data?.name}
+							image={`https://${data?.image}.ipfs.nftstorage.link`}
+							description={data?.description}
 						/>
 					</Tabs.Panel>
 
 					<Tabs.Panel value='second'>
-						<ProffPannel />
+						<ProffPannel admins={admins} />
 					</Tabs.Panel>
 
 					<Tabs.Panel value='third'>
@@ -49,7 +67,7 @@ export default function University() {
 				<Chat
 					// @ts-ignore
 					account={address} //user address
-					supportAddress='0x9e03C44b5A09db89bf152F8C5500dF3360c1C5bF' //support address
+					supportAddress={admins[0]} //support address
 					apiKey='jVPMCRom1B.iDRMswdehJG7NpHDiECIHwYMMv6k2KzkPJscFIDyW8TtSnk4blYnGa8DIkfuacU0'
 					env='staging'
 				/>

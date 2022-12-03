@@ -13,9 +13,9 @@ export const useContract = () => {
         return tx.wait()
     }
 
-    const createCourse = async (universityId: number, name: string, admins: string[], uri: string, price: string) => {
+    const createCourse = async (universityId: number, name: string, admins: string[], uri: string, price: string, streamKey: string, playbackId: string) => {
         const wei = ethers.utils.parseEther(price)
-        const tx = await contract.createCourse(universityId, name, admins, uri, wei)
+        const tx = await contract.createCourse(universityId, name, admins, uri, wei, streamKey, playbackId)
         return tx.wait()
     }
 
@@ -26,6 +26,11 @@ export const useContract = () => {
 
     const enroll = async (courseId: number, price: string) => {
         const tx = await contract.enroll(courseId, {value: ethers.utils.parseEther(price)})
+        return tx.wait()
+    }
+
+    const addUser = async (accHex: string) => {
+        const tx = await contract.addUser(accHex)
         return tx.wait()
     }
 
@@ -114,6 +119,10 @@ export const useContract = () => {
         return await contract.isUniAdmin(universityId, admin)
     }
 
+    const getAccountHex = async (address: string) => {
+        return await contract.getAccountHex(address)
+    }
+
     return {
         createUniversity,
         createCourse,
@@ -138,7 +147,9 @@ export const useContract = () => {
         isUniversityAdmin,
         getTokenId,
         getCourse,
-        getAssignment
+        getAssignment,
+        addUser,
+        getAccountHex
     }
 
 }
