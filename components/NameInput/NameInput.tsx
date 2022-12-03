@@ -1,6 +1,9 @@
 import router from 'next/router';
-import { useEffect, useState } from 'react';
-import { AsyncInput } from '../AsyncInput/AsyncInput';
+import {useEffect, useState} from 'react';
+import {ApolloClient, InMemoryCache, ApolloProvider, gql} from '@apollo/client'
+import {AsyncInput} from '../AsyncInput/AsyncInput';
+import {useRouter} from "next/router"
+import {ACCOUNTS_SEARCH__QUERY} from "../../constants/graphql/queries";
 
 interface NameInputProps {
 	parentId: string | number;
@@ -16,47 +19,38 @@ interface NameInputProps {
 }
 
 export function NameInput(props: NameInputProps) {
-	const [loading, setLoading] = useState(false);
-	const [exists, setExists] = useState(false);
-	const [error, setError] = useState<string>();
-	const [query, setQuery] = useState();
+	const [loading, setLoading] = useState(false)
+	const [exists, setExists] = useState(false)
+	const [error, setError] = useState<string>()
+	const [query, setQuery] = useState()
+	const router = useRouter()
+	const client = new ApolloClient({
+		// TODO: Change from testnet to mainnet
+		uri: 'https://api.thegraph.com/subgraphs/name/valist-io/valistmumbai',
+		cache: new InMemoryCache(),
+	})
 
-	// useEffect(() => {
-	// 	const name = props.value;
-	// 	// if (
-	// 	// 	router.pathname === '/create-organisation' ||
-	// 	// 	router.pathname === '/create-release'
-	// 	// ) {
-	// 	// 	// TODO: fix this
-	// 	// 	setQuery({
-	// 	// 		query: gql(ACCOUNTS_SEARCH__QUERY),
-	// 	// 		variables: {
-	// 	// 			search: props.value,
-	// 	// 		},
-	// 	// 	});
-	// 	// }
-	// 	if (router.pathname === '/create-project') {
-	// 		setQuery({
-	// 			query: gql`
-	// 				query UniqueProject(
-	// 					$project: String
-	// 					$accountName: String
-	// 				) {
-	// 					accounts(where: { name: $accountName }) {
-	// 						projects(where: { name_contains: $project }) {
-	// 							id
-	// 							name
-	// 						}
-	// 					}
-	// 				}
-	// 			`,
-	// 			variables: {
-	// 				project: name,
-	// 				accountName: props.parentId,
-	// 			},
-	// 		});
-	// 	}
-	// }, [props.value]);
+	useEffect(() => {
+		const name = props.value;
+		if (router.pathname === '/create-university') {
+			setQuery({
+				query: gql(ACCOUNTS_SEARCH__QUERY),
+				variables: {
+					search: props.value,
+				},
+			});
+		}
+		if (router.pathname === '/create-project') {
+			setQuery({
+				// @ts-ignore
+				query: gql(`query UniqueProject( $project: String $accountName: String ) { accounts(where: { name: $accountName }) { projects(where: { name_contains: $project }) { id name } } } `),
+				variables: {
+					project: name,
+					accountName: props.parentId,
+				},
+			});
+		}
+	}, [props.value]);
 
 	useEffect(() => {
 		setLoading(false);
@@ -67,19 +61,13 @@ export function NameInput(props: NameInputProps) {
 		setLoading(true);
 
 		const timeout = setTimeout(() => {
-			// this uses the same contract method for accounts, projects, and releases
-			if (router.pathname === '/create-release') {
-				// TODO: fix this
-				setError(undefined);
-				setExists(false);
-				setLoading(false);
-				return;
-			}
+			console.log('query', query);
 			client
 				.query(query)
 				.then((res) => {
+					console.log('res', res);
 					if (
-						router.pathname === '/create-organisation' &&
+						router.pathname === '/create-university' &&
 						res.data.accounts.length > 0
 					) {
 						setError('Name already exists');

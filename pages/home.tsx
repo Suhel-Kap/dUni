@@ -14,7 +14,7 @@ export default function Home() {
 
 				<Group position='right'>
 					{/* <Button variant='outline'>1</Button> */}
-					<Link href='/create-course'>
+					<Link href='/create-university'>
 						<Button
 							variant='outline'
 							color='indigo'

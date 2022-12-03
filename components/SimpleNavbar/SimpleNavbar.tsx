@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
 	Navbar,
 	Center,
@@ -8,10 +8,8 @@ import {
 	Stack,
 } from '@mantine/core';
 import { TablerIcon, IconHome2, IconUserCircle } from '@tabler/icons';
-import { ActionToggle } from '../ActionToggle/ActionToggle';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-// import { MantineLogo } from '@mantine/ds';
+import { useAccount } from 'wagmi';
 
 const useStyles = createStyles((theme) => ({
 	link: {
@@ -74,33 +72,18 @@ function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
 	);
 }
 
-const mockdata = [
-	{ icon: IconUserCircle, label: 'Your Profile', link: '/user-profile' },
-	{ icon: IconHome2, label: 'Home', link: '/home' },
-
-	// {
-	// 	icon: IconSchool,
-	// 	label: 'Create University',
-	// 	link: '/create-university',
-	// },
-	// { icon: IconBook2, label: 'Create Course', link: '/create-course' },
-	// { icon: IconCalendarStats, label: 'Releases', link: '/' },
-	// { icon: IconUser, label: 'Account', link: '/' },
-	// { icon: IconFingerprint, label: 'Security', link: '/' },
-	// { icon: IconSettings, label: 'Settings', link: '/' },
-];
-
 export function SimpleNavbar() {
-	const router = useRouter();
 	const [active, setActive] = useState(0);
 	const { classes, cx } = useStyles();
-
-	useEffect(() => {
-		const index = mockdata.findIndex(
-			(item) => item.link === router.pathname
-		);
-		setActive(index);
-	}, []);
+	const { address } = useAccount();
+	const mockdata = [
+		{
+			icon: IconUserCircle,
+			label: 'Your Profile',
+			link: `/user-profile?address=${address}`,
+		},
+		{ icon: IconHome2, label: 'Home', link: '/home' },
+	];
 
 	const links = mockdata.map((link, index) => (
 		<Link href={link.link}>

@@ -14,38 +14,81 @@ import { useState } from 'react';
 import { useForm, zodResolver } from '@mantine/form';
 import { schema } from './Schema';
 import { showNotification } from '@mantine/notifications';
-import { IconCheck } from '@tabler/icons';
+import {IconAlertCircle, IconCheck, IconLoader} from '@tabler/icons';
+import useNftStorage from "../../hooks/useNftStorage";
+import useLens from "../../hooks/useLens";
+import {useAccount, useSigner} from "wagmi";
+import {useRouter} from "next/router";
 
 export function CreateUser() {
 	const [image, setImage] = useState<File>();
+	const {uploadImage,uploadText} = useNftStorage()
+	const {createProfile, profileExists} = useLens()
+	const {address} = useAccount()
+	const [loading, setLoading] = useState(false);
+	const {data: signer} = useSigner()
+	const router = useRouter()
 
 	const form = useForm({
 		validate: zodResolver(schema),
 		validateInputOnChange: true,
 		initialValues: {
 			username: '',
-			bio: '',
 		},
 	});
 
-	const handleSubmit = () => {
+	const handleSubmit = async () => {
+		setLoading(true)
 		showNotification({
-			title: 'Success',
-			message: 'User edited successfully',
-			color: 'teal',
-			icon: <IconCheck />,
+			title: 'Creating profile',
+			message: 'Creating your lens profile',
+			color: 'yellow',
+			icon: <IconLoader />,
 		});
+
+		const exists = await profileExists(form.values.username)
+		console.log("exists", exists)
+		if(exists){
+			showNotification({
+				title: 'Error',
+				message: 'Username already taken',
+				color: 'red',
+				icon: <IconAlertCircle />,
+			});
+			return
+		}
+
+		let cid
+		if(image){
+			cid = await uploadImage(image)
+		}
+		try{
+			await createProfile(form.values.username, address!, signer, `ipfs://${cid}`)
+			showNotification({
+				title: 'Profile created',
+				message: 'Your profile has been created',
+				color: 'teal',
+				icon: <IconCheck />,
+			});
+			setLoading(false)
+		} catch (e){
+			console.log(e)
+			showNotification({
+				title: 'Error',
+				message: 'There was an error creating your profile',
+				color: 'red',
+				icon: <IconAlertCircle />,
+			});
+		}
+		setLoading(false)
 	};
 
 	return (
 		<Container>
 			<Center>
 				<Paper
-					// shadow='sm'
 					radius='lg'
-					// mt={20}
 					p='lg'
-					// withBorder
 					w={700}
 				>
 					<Title align='center' mb={10}>
@@ -64,17 +107,6 @@ export function CreateUser() {
 						</Grid.Col>
 
 						<Grid.Col span={9}>
-							<Title order={4}>
-								Bio <span style={{ color: 'red' }}>*</span>
-							</Title>
-							<Textarea
-								placeholder='Your Bio . . . '
-								required
-								{...form.getInputProps('bio')}
-							/>
-						</Grid.Col>
-
-						<Grid.Col span={9}>
 							<Title order={4} my={5}>
 								Profile Image
 							</Title>
@@ -88,7 +120,9 @@ export function CreateUser() {
 
 						<Grid.Col span={9}>
 							<Group position='right' mt='lg'>
-								<Button onClick={() => handleSubmit()}>
+								<Button
+									disabled={loading}
+									onClick={() => handleSubmit()}>
 									Submit
 								</Button>
 							</Group>
