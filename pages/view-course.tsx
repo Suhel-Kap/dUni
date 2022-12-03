@@ -23,13 +23,16 @@ import {useContract} from "../hooks/useContract";
 export default function Home() {
 	const router = useRouter()
 	const {address, status} = useAccount()
-	const {getStudents} = useContract()
+	const {getStudents, isCourseAdmin} = useContract()
 	const [students, setStudents] = useState<any>([])
+	const [admins, setAdmins] = useState<any>(["0x0000000000000000000000000000000000000000"])
 	useEffect(() => {
 		if(router.query.id === undefined) return
 		const id = router.query.id
 		console.log("id", id)
 		const getStuds = async () => {
+			const isProf = await isCourseAdmin(parseInt(id as string), address!)
+			if(isProf) return
 			const studs = await getStudents(parseInt(id as string))
 			if(!studs.includes(address)) {
 				alert("You are not enrolled in this course")
@@ -83,7 +86,7 @@ export default function Home() {
 					</Tabs.Panel>
 
 					<Tabs.Panel value='second'>
-						<ProffPannel />
+						<ProffPannel admins={admins} />
 					</Tabs.Panel>
 
 					<Tabs.Panel value='third'>

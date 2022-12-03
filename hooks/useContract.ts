@@ -121,7 +121,7 @@ export const useContract = () => {
         return await contract.isAssignmentInCourse(courseId, assignmentId)
     }
 
-    const isCourseAdmin = async (courseId: number, admin: string) => {
+    const isCourseAdmin = async (courseId: number, admin: `0x${string}`) => {
         return await contract.isCourseAdmin(courseId, admin)
     }
 
