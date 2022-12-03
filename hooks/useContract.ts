@@ -15,6 +15,8 @@ export const useContract = () => {
 
     const createCourse = async (universityId: number, name: string, admins: string[], uri: string, price: string, streamKey: string, playbackId: string) => {
         const wei = ethers.utils.parseEther(price)
+        console.log(wei)
+        console.log({universityId, name, admins, uri, wei, streamKey, playbackId})
         const tx = await contract.createCourse(universityId, name, admins, uri, wei, streamKey, playbackId)
         return tx.wait()
     }
@@ -65,6 +67,10 @@ export const useContract = () => {
 
     const getTokenId = async (courseId: number, student: string) => {
         return await contract.getTokenId(courseId, student)
+    }
+
+    const getCourseIds = async (universityId: number) => {
+        return await contract.getCourseIds(universityId)
     }
 
     const getStudentGrade = async (assignmentId: number, student: string) => {
@@ -149,7 +155,8 @@ export const useContract = () => {
         getCourse,
         getAssignment,
         addUser,
-        getAccountHex
+        getAccountHex,
+        getCourseIds
     }
 
 }

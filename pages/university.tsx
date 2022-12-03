@@ -17,10 +17,12 @@ export default function University() {
 	const [data, setData] = useState<any>()
 	const [admins, setAdmins] = useState<any>(["0x0000000000000000000000000000000000000000"])
 	const [universityId, setUniversityId] = useState<number>()
+	const [id, setId] = useState<string>("0")
 	const router = useRouter()
 	useEffect(() => {
 		if(!signer) return
 		const id = router.query.id
+		setId(id as string)
 		const getUni = async () => {
 			if (typeof id === "string") {
 				setUniversityId(parseInt(id))
@@ -64,7 +66,7 @@ export default function University() {
 					</Tabs.Panel>
 
 					<Tabs.Panel value='third'>
-						<CoursePannel />
+						<CoursePannel id={id} />
 					</Tabs.Panel>
 				</Tabs>
 				<Chat
