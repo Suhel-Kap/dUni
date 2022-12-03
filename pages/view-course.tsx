@@ -25,6 +25,7 @@ export default function Home() {
 	const {address, status} = useAccount()
 	const {getStudents, isCourseAdmin, getCourse} = useContract()
 	const [data, setData] = useState<any>()
+	const [isTeacher, setIsTeacher] = useState<boolean>(false)
 	const [admins, setAdmins] = useState<any>(["0x0000000000000000000000000000000000000000"])
 	useEffect(() => {
 		if(router.query.id === undefined) return
@@ -32,7 +33,10 @@ export default function Home() {
 		console.log("id", id)
 		const getStuds = async () => {
 			const isProf = await isCourseAdmin(parseInt(id as string), address!)
-			if(isProf) return
+			if(isProf) {
+				setIsTeacher(true)
+				return
+			}
 			const studs = await getStudents(parseInt(id as string))
 			if(!studs.includes(address)) {
 				alert("You are not enrolled in this course")
@@ -63,12 +67,12 @@ export default function Home() {
 						<Tabs.Tab value='third' icon={<IconPencil size={18} />}>
 							Assignments
 						</Tabs.Tab>
-						<Tabs.Tab
+						{isTeacher && <Tabs.Tab
 							value='fourth'
-							icon={<IconPaperclip size={18} />}
+							icon={<IconPaperclip size={18}/>}
 						>
 							Create Assignment
-						</Tabs.Tab>
+						</Tabs.Tab>}
 						<Tabs.Tab value='fifth' icon={<IconTarget size={18} />}>
 							View Submission
 						</Tabs.Tab>
@@ -83,6 +87,7 @@ export default function Home() {
 
 					<Tabs.Panel value='first'>
 						<CourseInfoPannel
+							isTeacher={isTeacher}
 							courseName={data?.name}
 							image={`https://${data?.image}.ipfs.nftstorage.link`}
 							description={data?.description}

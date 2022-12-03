@@ -16,17 +16,25 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useContract } from '../../hooks/useContract';
 import { DropzoneButton } from '../DropzoneButton/DropzoneButton';
+import useNftStorage from "../../hooks/useNftStorage";
+import {ImageInput} from "../ImageInput/ImageInput";
+import {showNotification} from "@mantine/notifications";
 
 export function AssignmentPannel() {
 	const [opened, setOpened] = useState(false);
 	const theme = useMantineTheme();
 	const router = useRouter()
-	const {getAssignmentIds, getAssignment} = useContract()
-
+	const {getAssignmentIds, getAssignment, submitAssignment} = useContract()
+	const [assignId, setAssignId] = useState<any>()
+	const [image, setImage] = useState<File>();
+	const {uploadImage} = useNftStorage()
+	const [id, setId] = useState<any>()
+	const [loading, setLoading] = useState(false);
 	const [data, setData] = useState<any>([])
 
 	useEffect(() => {
 		if (router.query.id) {
+			setId(router.query.id)
 			fetchAssignments()
 		}
 	}, [router.query.id])
@@ -52,23 +60,38 @@ export function AssignmentPannel() {
 	// 			'Hey there!I have a lot of experience in management and I think I am the best fit for this position :)',
 	// 		dueDate: '12/12/2020',
 	// 	},
-	// 	{
-	// 		title: 'Pattric Collins',
-	// 		description:
-	// 			'Hey! I have done a lot of stuff in digital marketing and I think I am the best fit for this position :)',
-	// 		dueDate: '12/12/2020',
-	// 	},
-	// 	{
-	// 		title: 'Andy Samberg',
-	// 		description:
-	// 			'Hey! I have done a lot of stuff in digital marketing and I think I am the best fit for this position :)',
-	// 		dueDate: '12/12/2020',
-	// 	},
 	// ];
+
+	const handleSubmit = async () => {
+		setLoading(true)
+		if (image) {
+			showNotification({
+				title: "Submitting Assignment",
+				message: "Please wait while we submit your assignment",
+			})
+			const url = await uploadImage(image)
+			try{
+				await submitAssignment(parseInt(id), assignId, url)
+				showNotification({
+					title: "Assignment Submitted",
+					message: "Your assignment has been submitted",
+				})
+				setLoading(false)
+			} catch (e){
+				console.log(e)
+				showNotification({
+					title: "Error",
+					message: "Error while submitting assignment",
+					color: "red"
+				})
+				setLoading(false)
+			}
+		}
+	}
 
 	const assignments = data.map((item: any) => (
 		<>
-			<Paper shadow='sm' radius='lg' mt={20} p='lg' withBorder>
+			<Paper key={item.id} shadow='sm' radius='lg' mt={20} p='lg' withBorder>
 				<Group position='apart'>
 					<Title order={2}>{item.name}</Title>
 				</Group>
@@ -85,7 +108,10 @@ export function AssignmentPannel() {
 							color='green'
 							ml={20}
 							mt={20}
-							onClick={() => setOpened(true)}
+							onClick={() => {
+								setAssignId(item.id)
+								setOpened(true)
+							}}
 						>
 							Submit Assignment
 						</Button>
@@ -107,7 +133,17 @@ export function AssignmentPannel() {
 				<Title order={3} mb={20} align='center'>
 					Submit Your Work
 				</Title>
-				<DropzoneButton />
+				<ImageInput
+					width={600}
+					height={300}
+					onChange={setImage}
+					value={image}
+				/>
+				<Center>
+					<Button onClick={async() => await handleSubmit()}>
+						Submit
+					</Button>
+				</Center>
 			</Modal>
 		</>
 	));
