@@ -9,7 +9,6 @@ export const useContract = () => {
     const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, signer!)
 
     const createUniversity = async (admins: string[], uri: string) => {
-        console.log(admins, uri)
         const tx = await contract.createUniversity(admins, uri)
         return tx.wait()
     }
