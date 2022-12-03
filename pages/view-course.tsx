@@ -23,8 +23,8 @@ import {useContract} from "../hooks/useContract";
 export default function Home() {
 	const router = useRouter()
 	const {address, status} = useAccount()
-	const {getStudents, isCourseAdmin} = useContract()
-	const [students, setStudents] = useState<any>([])
+	const {getStudents, isCourseAdmin, getCourse} = useContract()
+	const [data, setData] = useState<any>()
 	const [admins, setAdmins] = useState<any>(["0x0000000000000000000000000000000000000000"])
 	useEffect(() => {
 		if(router.query.id === undefined) return
@@ -40,6 +40,14 @@ export default function Home() {
 			}
 		}
 		getStuds()
+		const getCourseData = async () => {
+			const course = await getCourse(parseInt(id as string))
+			setAdmins(course[0])
+			const data = await fetch(`https://${course[1]}.ipfs.nftstorage.link`)
+			const json = await data.json()
+			setData(json)
+		}
+		getCourseData()
 	}, [router.isReady, router.query,status])
 	return (
 		<>
@@ -75,13 +83,9 @@ export default function Home() {
 
 					<Tabs.Panel value='first'>
 						<CourseInfoPannel
-							courseName={'Data Science'}
-							image={
-								'https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8ZGF0YSUyMHNjaWVuY3xlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60'
-							}
-							description={
-								'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facere pariatur numquam, quisquam recusandae repellendus dolorem ducimus facilis at repudiandae quia accusamus sint totam rerum suscipit nulla quidem eveniet nam enim! Nobis quos a dolorem blanditiis placeat? Iure sunt deserunt aperiam libero dolorum necessitatibus ad minima tenetur expedita odit possimus dignissimos numquam, facere similique exercitationem delectus. Incidunt exercitationem quaerat ut natus! Porro, laborum atque! Reiciendis labore perferendis obcaecati doloremque, suscipit facere alias perspiciatis? Eius neque tenetur illo tempora alias! Nulla nostrum rem optio a fuga praesentium dicta. Doloremque fugiat eos incidunt! Ratione repellendus eligendi quisquam eum accusantium esse obcaecati rerum praesentium consectetur, molestiae suscipit natus tempore consequatur quidem sapiente libero nihil? Nesciunt accusantium odit quidem. Distinctio veniam ullam obcaecati doloribus tenetur! Labore rem id eos aperiam minus suscipit, nisi veritatis accusantium amet quae nemo incidunt necessitatibus dolore culpa vitae natus itaque nulla blanditiis molestiae sit voluptates quasi fuga provident. Dolorem, blanditiis.'
-							}
+							courseName={data?.name}
+							image={`https://${data?.image}.ipfs.nftstorage.link`}
+							description={data?.description}
 						/>
 					</Tabs.Panel>
 
