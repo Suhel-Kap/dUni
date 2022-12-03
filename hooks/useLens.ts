@@ -2,7 +2,8 @@ import {ApolloClient, ApolloLink, gql, HttpLink, InMemoryCache} from '@apollo/cl
 import {
     AUTHENTICATE_MUTATION,
     CHALLENGE_QUERY,
-    CREATE_PROFILE_MUTATION, LENS_PROFILE_DETAILS,
+    CREATE_PROFILE_MUTATION,
+    LENS_PROFILE_DETAILS,
     LENS_PROFILE_EXISTS
 } from "../constants/graphql/queries";
 
@@ -49,7 +50,6 @@ export default function useLens() {
             // Call the next link in the middleware chain.
             return forward(operation);
         });
-
         return new ApolloClient({
             link: authLink.concat(httpLink), // Chain it with the HttpLink
             cache: new InMemoryCache()

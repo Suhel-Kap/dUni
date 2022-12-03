@@ -34,6 +34,7 @@ export function NameInput(props: NameInputProps) {
 		const name = props.value;
 		if (router.pathname === '/create-university') {
 			setQuery({
+				// @ts-ignore
 				query: gql(ACCOUNTS_SEARCH__QUERY),
 				variables: {
 					search: props.value,
@@ -63,6 +64,7 @@ export function NameInput(props: NameInputProps) {
 		const timeout = setTimeout(() => {
 			console.log('query', query);
 			client
+				// @ts-ignore
 				.query(query)
 				.then((res) => {
 					console.log('res', res);

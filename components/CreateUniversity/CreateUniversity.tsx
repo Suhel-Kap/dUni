@@ -21,12 +21,21 @@ import { MemberList } from '../MemberList/MemberList';
 import { useListState } from '@mantine/hooks';
 import { schema } from './Schema';
 import {useAccount} from "wagmi";
+import {CONTRACT_ADDRESS} from "../../constants";
+import {useContract} from "../../hooks/useContract";
+import useNftStorage from "../../hooks/useNftStorage";
+import {showNotification} from "@mantine/notifications";
+import {useRouter} from "next/router";
 
 export function CreateUniversity() {
 	const [active, setActive] = useState(0);
+	const [loading, setLoading] = useState(false);
 	const [image, setImage] = useState<File>();
 	const [members, membersHandlers] = useListState<`0x${string}`>([]);
 	const {address} = useAccount()
+	const router = useRouter()
+	const {uploadJson, uploadImage} = useNftStorage()
+	const {createUniversity} = useContract()
 
 	const form = useForm({
 		validate: zodResolver(schema),
@@ -62,7 +71,37 @@ export function CreateUniversity() {
 		setActive((current) => (current > 0 ? current - 1 : current));
 
 	const handleSubmit = async () => {
+		setLoading(true)
+		showNotification({
+			title: 'Creating University',
+			message: 'Please wait while we create your university',
+		})
+		const finMembers = [...members, address!, CONTRACT_ADDRESS]
 		addMember(address!);
+		addMember(CONTRACT_ADDRESS)
+		try{
+			const imageCid = await uploadImage(image!)
+			const fileId = await uploadJson({
+				name: form.values.displayName,
+				description: form.values.description,
+				image: imageCid,
+			})
+			const res = await createUniversity(finMembers, fileId)
+			console.log(res)
+			showNotification({
+				title: 'University Created',
+				message: 'Your university has been created',
+			})
+			setLoading(false)
+			router.push("/home")
+		} catch (e){
+			console.error(e)
+			showNotification({
+				title: 'Error',
+				message: 'There was an error creating your university',
+			})
+			setLoading(false)
+		}
 	};
 
 	return (
@@ -176,7 +215,7 @@ export function CreateUniversity() {
 				)}
 				{active !== 2 && <Button onClick={nextStep}>Next step</Button>}
 				{active === 2 && (
-					<Button onClick={() => handleSubmit()}>Confirm</Button>
+					<Button disabled={loading} onClick={() => handleSubmit()}>Confirm</Button>
 				)}
 			</Group>
 		</>

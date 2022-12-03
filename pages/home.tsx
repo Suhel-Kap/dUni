@@ -3,8 +3,22 @@ import { IconSchool } from '@tabler/icons';
 import Link from 'next/link';
 import { Layout } from '../components/Layout/Layout';
 import { UniversityCard } from '../components/UniversityCard/UniversityCard';
+import {useContract} from "../hooks/useContract";
+import {useEffect, useState} from "react";
 
 export default function Home() {
+	const {totalUniversities} = useContract()
+
+	const [totalUni, setTotalUni] = useState<number>(0)
+	const renderUni = Array.from({length: totalUni}, (_, i) => <Grid.Col span={4}><UniversityCard key={i+1} id={i+1} /></Grid.Col>)
+	useEffect(() => {
+		const getUni = async () => {
+			const totalUni = await totalUniversities()
+			setTotalUni(totalUni)
+		}
+		getUni()
+	}, [])
+
 	return (
 		<div>
 			<Layout>
@@ -28,41 +42,7 @@ export default function Home() {
 					</Link>
 				</Group>
 				<Grid mt={10}>
-					<Grid.Col span={4}>
-						<UniversityCard
-							university_name={'Sarvajanik University'}
-							description={
-								'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolorum, perspiciatis ab? Quo provident sint consequatur autem officia placeat aliquid quidem hic est voluptatum quisquam, praesentium natus soluta molestiae commodi eos?'
-							}
-							image={
-								'https://images.unsplash.com/photo-1530099486328-e021101a494a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8MnxHZk9nSW91dHRPTXx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60'
-							}
-						/>
-					</Grid.Col>
-
-					<Grid.Col span={4}>
-						<UniversityCard
-							university_name={'University of Alberta'}
-							description={
-								'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolorum, perspiciatis ab? Quo provident sint consequatur autem officia placeat aliquid quidem hic est voluptatum quisquam, praesentium natus soluta molestiae commodi eos?'
-							}
-							image={
-								'https://images.unsplash.com/photo-1530099486328-e021101a494a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8MnxHZk9nSW91dHRPTXx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60'
-							}
-						/>
-					</Grid.Col>
-
-					<Grid.Col span={4}>
-						<UniversityCard
-							university_name={'University of Texas'}
-							description={
-								'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolorum, perspiciatis ab? Quo provident sint consequatur autem officia placeat aliquid quidem hic est voluptatum quisquam, praesentium natus soluta molestiae commodi eos?'
-							}
-							image={
-								'https://images.unsplash.com/photo-1530099486328-e021101a494a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8MnxHZk9nSW91dHRPTXx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60'
-							}
-						/>
-					</Grid.Col>
+					{renderUni}
 				</Grid>
 			</Layout>
 		</div>

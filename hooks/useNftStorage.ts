@@ -11,11 +11,16 @@ const useNftStorage = () => {
         return await storage.storeBlob(blob)
     }
 
+    const uploadJson = async (json: any) => {
+        const blob = new Blob([JSON.stringify(json)], { type: "application/json" })
+        return await storage.storeBlob(blob)
+    }
+
     const uploadText = async (text: string) => {
         return await storage.storeBlob(new Blob([text]))
     }
 
-    return { uploadImage, uploadText }
+    return { uploadImage, uploadText, uploadJson }
 }
 
 export default useNftStorage

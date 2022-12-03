@@ -1,12 +1,15 @@
-import { Center, Title, Image, Divider, Text, Paper } from '@mantine/core';
 import { Layout } from '../components/Layout/Layout';
 import { Tabs } from '@mantine/core';
 import { IconBook, IconSchool, IconUsers } from '@tabler/icons';
 import { UniversityPannel } from '../components/UniversityPannel/UniversityPannel';
 import { ProffPannel } from '../components/ProffPannel/ProffPannel';
 import { CoursePannel } from '../components/CoursePannel/CoursePannel';
+import { Chat } from '@pushprotocol/uiweb';
+import { useAccount } from 'wagmi';
 
-export default function Home() {
+export default function University() {
+	const { address } = useAccount();
+
 	return (
 		<div>
 			<Layout>
@@ -43,6 +46,13 @@ export default function Home() {
 						<CoursePannel />
 					</Tabs.Panel>
 				</Tabs>
+				<Chat
+					// @ts-ignore
+					account={address} //user address
+					supportAddress='0x9e03C44b5A09db89bf152F8C5500dF3360c1C5bF' //support address
+					apiKey='jVPMCRom1B.iDRMswdehJG7NpHDiECIHwYMMv6k2KzkPJscFIDyW8TtSnk4blYnGa8DIkfuacU0'
+					env='staging'
+				/>
 			</Layout>
 		</div>
 	);

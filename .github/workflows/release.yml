@@ -1,0 +1,33 @@
+name: Valist Publish
+on:
+  push:
+    branches:
+      - main
+jobs:
+  valist-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Build and export Next.js app
+        run: |
+          npm install
+          npm run build
+          npm run export
+
+      - run: echo "TIMESTAMP=$(date +%Y%m%d%H%M)" >> $GITHUB_ENV
+
+      - name: Valist Publish
+        uses: valist-io/valist-github-action@v2.5.6
+        with:
+          private-key: ${{ secrets.PRIVATE_KEY }}
+          account: duni
+          project: duni
+          release: github-action-${{ env.TIMESTAMP }}
+          path: out
