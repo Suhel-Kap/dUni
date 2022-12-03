@@ -16,12 +16,14 @@ export default function University() {
 	const { getUniversity } = useContract()
 	const [data, setData] = useState<any>()
 	const [admins, setAdmins] = useState<any>(["0x0000000000000000000000000000000000000000"])
+	const [universityId, setUniversityId] = useState<number>()
 	const router = useRouter()
 	useEffect(() => {
 		if(!signer) return
-		let id = router.query.id
+		const id = router.query.id
 		const getUni = async () => {
 			if (typeof id === "string") {
+				setUniversityId(parseInt(id))
 				const uni = await getUniversity(parseInt(id))
 				const data = await fetch(`https://${uni[1]}.ipfs.nftstorage.link`)
 				const json = await data.json()
@@ -53,6 +55,7 @@ export default function University() {
 							universityName={data?.name}
 							image={`https://${data?.image}.ipfs.nftstorage.link`}
 							description={data?.description}
+							universityId={universityId!}
 						/>
 					</Tabs.Panel>
 

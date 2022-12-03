@@ -10,6 +10,7 @@ import {
 import { TablerIcon, IconHome2, IconUserCircle } from '@tabler/icons';
 import Link from 'next/link';
 import { useAccount } from 'wagmi';
+import { useRouter } from 'next/router';
 
 const useStyles = createStyles((theme) => ({
 	link: {
@@ -76,6 +77,8 @@ export function SimpleNavbar() {
 	const [active, setActive] = useState(0);
 	const { classes, cx } = useStyles();
 	const { address } = useAccount();
+	const router = useRouter();
+	console.log("router", router);
 	const mockdata = [
 		{
 			icon: IconUserCircle,
@@ -90,7 +93,7 @@ export function SimpleNavbar() {
 			<NavbarLink
 				{...link}
 				key={link.label}
-				active={index === active}
+				active={link.link == router.asPath}
 				onClick={() => {
 					setActive(index);
 				}}
