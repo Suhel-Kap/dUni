@@ -10,46 +10,98 @@ import {
 } from '@mantine/core';
 import { IconPencil, IconPlus, IconTarget } from '@tabler/icons';
 import makeBlockie from 'ethereum-blockies-base64';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import { Container } from 'tabler-icons-react';
+import { useSigner } from 'wagmi';
+import { useContract } from '../../hooks/useContract';
 import { Button } from '../Button/Button';
 
 export function SubmissionPannel() {
-	const data = [
-		{
-			title: 'PDS Assignment',
-			marks: [
-				{
-					address: '0x044B595C9b94A17Adc489bD29696af40ccb3E4d2',
-					grade: '78',
-				},
-				{
-					address: '0x044B595C9b94A17Adc489bD29696af40ccb3E4d1',
-					grade: '85',
-				},
-				{
-					address: '0x044B595C9b94A17Adc489bD29696af40ccb3E4d3',
-					grade: '61',
-				},
-			],
-		},
-		{
-			title: 'ADA Assignment',
-			marks: [
-				{
-					address: '0x044B595C9b94A17Adc489bD29696af40ccb3E4d2',
-					grade: '78',
-				},
-				{
-					address: '0x044B595C9b94A17Adc489bD29696af40ccb3E4d1',
-					grade: '85',
-				},
-				{
-					address: '0x044B595C9b94A17Adc489bD29696af40ccb3E4d3',
-					grade: '61',
-				},
-			],
-		},
-	];
+	const {data: signer} = useSigner()
+	const router = useRouter()
+	const {getAssignmentIds, getAssignment, getStudents, getStudentGrades} = useContract()
+
+	const [data, setData] = useState<any>([])
+
+	useEffect(() => {
+		if (router.query.id && signer) {
+			// fetchAssignments()
+			fetchStudents()
+		}
+	}, [router.query.id, signer])
+
+	const fetchStudents = async () => {
+		console.log("fetching students")
+		const id = router.query.id
+		if (typeof id === "string") {
+			const students = await getStudents(parseInt(id))
+			fetchAssignments(students)
+		}
+	}
+
+	const fetchAssignments = async (students: [string]) => {
+		const cId = router.query.id
+		if (typeof cId === "string") {
+			const ids = await getAssignmentIds(parseInt(cId))
+			const data = await Promise.all(ids.map(async (id: any) => {
+				const res = await getAssignment(parseInt(id))
+				const data = await fetch(`https://${res}.ipfs.nftstorage.link`)
+				const json = await data.json()
+				const title = json.name
+				const result = await getStudentGrades(parseInt(cId), parseInt(id))
+				const marks = result.length > 0 ? result[0].map((student: string, index) => {
+					return {
+						address: student,
+						marks: (result[1][index]).toString()
+					}
+				}) : []
+				return {
+					title,
+					marks
+				}
+			}))
+			console.log("data", data)
+			setData(data)
+		}
+	}
+
+	// const data = [
+	// 	{
+	// 		title: 'PDS Assignment',
+	// 		marks: [
+	// 			{
+	// 				address: '0x044B595C9b94A17Adc489bD29696af40ccb3E4d2',
+	// 				grade: '78',
+	// 			},
+	// 			{
+	// 				address: '0x044B595C9b94A17Adc489bD29696af40ccb3E4d1',
+	// 				grade: '85',
+	// 			},
+	// 			{
+	// 				address: '0x044B595C9b94A17Adc489bD29696af40ccb3E4d3',
+	// 				grade: '61',
+	// 			},
+	// 		],
+	// 	},
+	// 	{
+	// 		title: 'ADA Assignment',
+	// 		marks: [
+	// 			{
+	// 				address: '0x044B595C9b94A17Adc489bD29696af40ccb3E4d2',
+	// 				grade: '78',
+	// 			},
+	// 			{
+	// 				address: '0x044B595C9b94A17Adc489bD29696af40ccb3E4d1',
+	// 				grade: '85',
+	// 			},
+	// 			{
+	// 				address: '0x044B595C9b94A17Adc489bD29696af40ccb3E4d3',
+	// 				grade: '61',
+	// 			},
+	// 		],
+	// 	},
+	// ];
 
 	const assignments = data.map((item) => (
 		<>

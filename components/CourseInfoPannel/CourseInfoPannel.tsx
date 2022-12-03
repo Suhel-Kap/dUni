@@ -12,7 +12,9 @@ import {
 } from '@mantine/core';
 import { IconSchool, IconBook2, IconBooks, IconCamera } from '@tabler/icons';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { useContract } from '../../hooks/useContract';
 
 interface CourseInfoPannelProps {
 	courseName: string;
@@ -27,8 +29,20 @@ export function CourseInfoPannel({
 }: CourseInfoPannelProps) {
 	const theme = useMantineTheme();
 	const [opened, setOpened] = useState(false);
-
+	const {getStreamKey} = useContract()
+	const router = useRouter()
 	const [streamKey, setStreamKey] = useState(null);
+
+	useEffect(() => {
+		console.log(router.query);
+		(async() => {
+			const id = router.query.id
+			if (typeof id === "string") {
+				const key = await getStreamKey(parseInt(id))
+				setStreamKey(key)
+			}
+		})()
+	}, [router.query]);
 	return (
 		<>
 			<Paper shadow='sm' radius='lg' mt={20} p='md' withBorder>
@@ -77,7 +91,7 @@ export function CourseInfoPannel({
 							</Text>
 
 							<Text>
-								Stream key:{' '}
+								Stream key:
 								{streamKey ? streamKey : 'Please wait...'}
 							</Text>
 						</Modal>

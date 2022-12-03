@@ -116,7 +116,7 @@ export function CreateCourse({universityId}:any) {
 			const data = await response.json()
 			console.log("data", data)
 			const playbackId = data.playbackId
-			const streamId = data.streamKey
+			const streamKey = data.streamKey
 			const imageCid = await uploadImage(image!)
 			const fileId = await uploadJson({
 				name: form.values.displayName,
@@ -129,7 +129,7 @@ export function CreateCourse({universityId}:any) {
 			console.log(fileId)
 			const id = router.query.id
 			if (typeof id === "string") {
-				const res = await createCourse(parseInt(id), form.values.projectName, finMembers, fileId, form.values.price.toString(), playbackId, streamId);
+				const res = await createCourse(parseInt(id), form.values.projectName, finMembers, fileId, form.values.price.toString(), streamKey, playbackId);
 				
 				console.log(res)
 				showNotification({
