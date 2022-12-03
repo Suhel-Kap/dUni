@@ -18,6 +18,8 @@ import {
 	IconUsers,
 } from '@tabler/icons';
 import Link from 'next/link';
+import {useContract} from "../../hooks/useContract";
+import {useEffect, useState} from "react";
 
 const useStyles = createStyles((theme) => ({
 	card: {
@@ -71,75 +73,49 @@ const mockdata = [
 ];
 
 interface UniversityCardProps {
-	university_name: string;
-	description: string;
-	image: string;
+	id: number;
+	university_name?: string;
+	description?: string;
+	image?: string;
 }
 
 export function UniversityCard({
-	university_name,
-	description,
-	image,
+	id
 }: UniversityCardProps) {
 	const { classes } = useStyles();
-	const features = mockdata.map((feature) => (
-		<Center key={feature.label}>
-			<feature.icon size={18} className={classes.icon} stroke={1.5} />
-			<Text size='xs'>{feature.label}</Text>
-		</Center>
-	));
-
+	const {getUniversity} = useContract()
+	const [data, setData] = useState<any>({
+		name: "test",
+		image: "https://images.unsplash.com/photo-1616161616161-1b1b1b1b1b1b?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80",
+		description: "test",
+	})
+	useEffect(() => {
+		const getUni = async () => {
+			const uni = await getUniversity(id)
+			const data = await fetch(`https://${uni[1]}.ipfs.nftstorage.link`)
+			const json = await data.json()
+			setData(json)
+		}
+		getUni()
+	}, [id])
 	return (
 		<Card withBorder radius='md' mt={20} mx={20} className={classes.card}>
 			<Card.Section className={classes.imageSection}>
-				<Image src={image} alt='University Image' />
+				<Image src={`https://${data.image}.ipfs.nftstorage.link`} alt='University Image' />
 			</Card.Section>
 
-			<Group position='apart' mt='md'>
+			<Group position='apart' my='md'>
 				<div>
 					<Title weight={500} order={2}>
-						{university_name}
+						{data.name}
 					</Title>
 					<Text size='md' color='dimmed'>
-						{description}
+						{data.description}
 					</Text>
 				</div>
-				{/* <Badge variant='outline'>25% off</Badge> */}
 			</Group>
 
-			<Card.Section className={classes.section} mt='md'>
-				<Text size='sm' color='dimmed' className={classes.label}>
-					Basic configuration
-				</Text>
-
-				<Group spacing={8} mb={-8}>
-					{features}
-				</Group>
-			</Card.Section>
-
 			<Card.Section className={classes.section}>
-				{/* <Group> */}
-				{/* <div>
-						<Text size='xl' weight={700} sx={{ lineHeight: 1 }}>
-							$168.00
-						</Text>
-						<Text
-							size='sm'
-							color='dimmed'
-							weight={500}
-							sx={{ lineHeight: 1 }}
-							mt={3}
-						>
-							per day
-						</Text>
-					</div> */}
-
-				{/* <Link href='/university'>
-						<Button radius='xl' style={{ flex: 1 }} fullWidth>
-							View University
-						</Button>
-					</Link> */}
-				{/* </Group> */}
 				<Link href='/university'>
 					<Button
 						radius='xl'

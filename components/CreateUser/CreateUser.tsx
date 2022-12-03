@@ -23,7 +23,7 @@ import {useRouter} from "next/router";
 export function CreateUser() {
 	const [image, setImage] = useState<File>();
 	const {uploadImage,uploadText} = useNftStorage()
-	const {createProfile, profileExists} = useLens()
+	const {createProfile, profileExists, login} = useLens()
 	const {address} = useAccount()
 	const [loading, setLoading] = useState(false);
 	const {data: signer} = useSigner()
@@ -63,6 +63,7 @@ export function CreateUser() {
 			cid = await uploadImage(image)
 		}
 		try{
+			// await login(address!, signer)
 			await createProfile(form.values.username, address!, signer, `ipfs://${cid}`)
 			showNotification({
 				title: 'Profile created',
@@ -79,8 +80,8 @@ export function CreateUser() {
 				color: 'red',
 				icon: <IconAlertCircle />,
 			});
+			setLoading(false)
 		}
-		setLoading(false)
 	};
 
 	return (
