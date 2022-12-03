@@ -123,7 +123,8 @@ export function CreateCourse({universityId}:any) {
 				shortDescription: form.values.shortDescription,
 				description: form.values.description,
 				image: imageCid,
-				tags: form.values.tags
+				tags: form.values.tags,
+				price: form.values.price.toString()
 			})
 			console.log(fileId)
 			const id = router.query.id
