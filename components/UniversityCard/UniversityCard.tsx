@@ -96,7 +96,10 @@ export function UniversityCard({
 	return (
 		<Card withBorder radius='md' mt={20} mx={20} className={classes.card}>
 			<Card.Section className={classes.imageSection}>
-				<Image src={`https://${data.image}.ipfs.nftstorage.link`} alt='University Image' />
+				<Image src={`https://${data.image}.ipfs.nftstorage.link`} alt='University Image' 
+        width={200}
+        height={200}
+        fit="contain" />
 			</Card.Section>
 
 			<Group position='apart' my='md'>
