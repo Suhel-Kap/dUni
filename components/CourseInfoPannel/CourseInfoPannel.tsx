@@ -34,6 +34,7 @@ export function CourseInfoPannel({
 	const [streamKey, setStreamKey] = useState(null);
 
 	useEffect(() => {
+		console.log(router.query);
 		(async() => {
 			const id = router.query.id
 			if (typeof id === "string") {
@@ -90,7 +91,7 @@ export function CourseInfoPannel({
 							</Text>
 
 							<Text>
-								Stream key:{' '}
+								Stream key:
 								{streamKey ? streamKey : 'Please wait...'}
 							</Text>
 						</Modal>
