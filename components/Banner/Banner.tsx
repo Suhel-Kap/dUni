@@ -10,6 +10,7 @@ import {
 	Stack,
 	Badge,
 	Title,
+	Modal,
 } from '@mantine/core';
 import Link from 'next/link';
 import {
@@ -18,11 +19,14 @@ import {
 	IconWorldWww,
 	IconCheck,
 	IconAlertCircle,
+	IconEdit,
 } from '@tabler/icons';
 import { showNotification, updateNotification } from '@mantine/notifications';
 // import { Worldcoin } from '../Worldcoin';
 // import useContract from '../../hooks/useContract';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { CreateUser } from '../CreateUser/CreateUser';
 // import useTableland from '../../hooks/useTableland';
 // import useEPNS from '../../hooks/useEPNS';
 
@@ -69,6 +73,7 @@ export function Banner({
 	profId,
 }: UserCardImageProps) {
 	const { classes, theme } = useStyles();
+	const [opened, setOpened] = useState(false);
 	console.log('stats', stats);
 
 	const items = stats.map((stat) => (
@@ -235,7 +240,7 @@ export function Banner({
 					</>
 				)}
 			</Stack>
-			{!isOwner && (
+			{!isOwner ? (
 				<Stack m={'md'}>
 					<Center mb={0}>
 						<Button
@@ -258,6 +263,43 @@ export function Banner({
 						</Button>
 					</Center>
 				</Stack>
+			) : (
+				<>
+					<Stack m={'md'}>
+						<Center mb={0}>
+							<Button
+								radius='md'
+								mt='xl'
+								size='md'
+								fullWidth={false}
+								variant='gradient'
+								gradient={{ from: 'indigo', to: 'cyan' }}
+								color={
+									theme.colorScheme === 'dark'
+										? undefined
+										: 'dark'
+								}
+								// onClick={() => {
+								// 	handleFollow();
+								// }}
+								onClick={() => {
+									setOpened(true);
+								}}
+								leftIcon={<IconEdit />}
+							>
+								Edit Profile
+							</Button>
+						</Center>
+					</Stack>
+
+					<Modal
+						opened={opened}
+						onClose={() => setOpened(false)}
+						size='lg'
+					>
+						<CreateUser />
+					</Modal>
+				</>
 			)}
 			{isOwner && (
 				<Stack m={'md'}>

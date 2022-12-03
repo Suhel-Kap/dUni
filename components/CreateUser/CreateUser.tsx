@@ -13,6 +13,8 @@ import { ImageInput } from '../ImageInput/ImageInput';
 import { useState } from 'react';
 import { useForm, zodResolver } from '@mantine/form';
 import { schema } from './Schema';
+import { showNotification } from '@mantine/notifications';
+import { IconCheck } from '@tabler/icons';
 
 export function CreateUser() {
 	const [image, setImage] = useState<File>();
@@ -26,21 +28,28 @@ export function CreateUser() {
 		},
 	});
 
-	const handleSubmit = () => {};
+	const handleSubmit = () => {
+		showNotification({
+			title: 'Success',
+			message: 'User edited successfully',
+			color: 'teal',
+			icon: <IconCheck />,
+		});
+	};
 
 	return (
 		<Container>
 			<Center>
 				<Paper
-					shadow='sm'
+					// shadow='sm'
 					radius='lg'
-					mt={20}
+					// mt={20}
 					p='lg'
-					withBorder
+					// withBorder
 					w={700}
 				>
 					<Title align='center' mb={10}>
-						Create User
+						Edit User Profile
 					</Title>
 					<Grid justify='center'>
 						<Grid.Col span={9}>

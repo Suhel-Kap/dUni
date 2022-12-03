@@ -74,7 +74,7 @@ function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
 }
 
 const mockdata = [
-	{ icon: IconUserCircle, label: 'Your Profile', link: '/user_profile' },
+	{ icon: IconUserCircle, label: 'Your Profile', link: '/user-profile' },
 	{ icon: IconHome2, label: 'Home', link: '/home' },
 
 	// {
