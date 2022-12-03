@@ -40,7 +40,7 @@ export function AssignmentPannel() {
 				const data = await fetch(`https://${res}.ipfs.nftstorage.link`)
 				const json = await data.json()
 				console.log(json)
-				return json
+				return {...json, id}
 			}))
 			setData(data)
 		}
