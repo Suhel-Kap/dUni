@@ -5,10 +5,16 @@ import {
 	IconBook,
 	IconPencil,
 	IconDeviceTv,
+	IconPaperclip,
+	IconTarget,
 } from '@tabler/icons';
+import { AssignmentPannel } from '../components/AssignmentPannel/AssignmentPannel';
 import { CourseInfoPannel } from '../components/CourseInfoPannel/CourseInfoPannel';
+import { CreateAssignment } from '../components/CreateAssignment/CreateAssignment';
 import { Layout } from '../components/Layout/Layout';
+import { LiveClassesPannel } from '../components/LiveClassesPannel/LiveClassesPannel';
 import { ProffPannel } from '../components/ProffPannel/ProffPannel';
+import { SubmissionPannel } from '../components/SubmissionPannel/SubmissionPannel';
 
 export default function Home() {
 	return (
@@ -27,6 +33,15 @@ export default function Home() {
 						</Tabs.Tab>
 						<Tabs.Tab
 							value='fourth'
+							icon={<IconPaperclip size={18} />}
+						>
+							Create Assignment
+						</Tabs.Tab>
+						<Tabs.Tab value='fifth' icon={<IconTarget size={18} />}>
+							View Submission
+						</Tabs.Tab>
+						<Tabs.Tab
+							value='sixth'
 							icon={<IconDeviceTv size={18} />}
 							ml='auto'
 						>
@@ -48,6 +63,22 @@ export default function Home() {
 
 					<Tabs.Panel value='second'>
 						<ProffPannel />
+					</Tabs.Panel>
+
+					<Tabs.Panel value='third'>
+						<AssignmentPannel />
+					</Tabs.Panel>
+
+					<Tabs.Panel value='fourth'>
+						<CreateAssignment />
+					</Tabs.Panel>
+
+					<Tabs.Panel value='fifth'>
+						<SubmissionPannel />
+					</Tabs.Panel>
+
+					<Tabs.Panel value='sixth'>
+						<LiveClassesPannel />
 					</Tabs.Panel>
 				</Tabs>
 			</Layout>

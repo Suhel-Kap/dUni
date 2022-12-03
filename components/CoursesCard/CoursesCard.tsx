@@ -11,6 +11,7 @@ import {
 	ActionIcon,
 } from '@mantine/core';
 import { IconCurrencyEthereum, IconShoppingCartPlus } from '@tabler/icons';
+import Link from 'next/link';
 
 const useStyles = createStyles((theme) => ({
 	card: {
@@ -93,9 +94,11 @@ export function CourseCard() {
 			</Card.Section>
 
 			<Group position='apart' mt='xl'>
-				<Text size='xl' weight={700} className={classes.title}>
-					{mockData.title}
-				</Text>
+				<Link href='/view-course'>
+					<Text size='xl' weight={700} className={classes.title}>
+						{mockData.title}
+					</Text>
+				</Link>
 				<Group>
 					<Badge size='lg' color='lime' leftSection={etherIcon}>
 						Price : 1350

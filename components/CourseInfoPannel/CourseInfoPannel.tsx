@@ -8,9 +8,11 @@ import {
 	useMantineTheme,
 	Text,
 	Image,
+	Modal,
 } from '@mantine/core';
-import { IconSchool, IconBook2, IconBooks } from '@tabler/icons';
+import { IconSchool, IconBook2, IconBooks, IconCamera } from '@tabler/icons';
 import Link from 'next/link';
+import { useState } from 'react';
 
 interface CourseInfoPannelProps {
 	courseName: string;
@@ -24,7 +26,9 @@ export function CourseInfoPannel({
 	description,
 }: CourseInfoPannelProps) {
 	const theme = useMantineTheme();
+	const [opened, setOpened] = useState(false);
 
+	const [streamKey, setStreamKey] = useState(null);
 	return (
 		<>
 			<Paper shadow='sm' radius='lg' mt={20} p='md' withBorder>
@@ -49,19 +53,34 @@ export function CourseInfoPannel({
 						</Grid.Col>
 					</Grid>
 
-					<Grid gutter='md' mt={60} mx={20} justify='flex-end'>
-						{/* <Link href='/create-course'>
-							<Button
-								variant='outline'
-								color='indigo'
-								radius='lg'
-								size='md'
-								mt={20}
-								leftIcon={<IconBook2 />}
-							>
-								Create Course
-							</Button>
-						</Link> */}
+					<Grid gutter='md' mt={0} mx={20} justify='flex-end'>
+						<Button
+							variant='outline'
+							color='indigo'
+							radius='lg'
+							size='md'
+							mt={20}
+							leftIcon={<IconCamera />}
+							onClick={() => setOpened(true)}
+						>
+							Start Live Class
+						</Button>
+
+						<Modal
+							opened={opened}
+							onClose={() => setOpened(false)}
+							centered
+							title='Start Live Class'
+						>
+							<Text>
+								Stream URL: rtmp://rtmp.livepeer.com/live
+							</Text>
+
+							<Text>
+								Stream key:{' '}
+								{streamKey ? streamKey : 'Please wait...'}
+							</Text>
+						</Modal>
 
 						<Image
 							height={360}
