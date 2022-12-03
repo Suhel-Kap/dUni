@@ -80,14 +80,14 @@ export function NavTabs({
 				// setActive(event);
 			}}
 		>
-			<Tabs.List grow position='center' mb={75}>
+			{/* <Tabs.List grow position='center' mb={75}>
 				<Tabs.Tab value='first'>Posts</Tabs.Tab>
 				{isOwner && (
 					<>
 						<Tabs.Tab value='third'>Manage Profile</Tabs.Tab>
 					</>
 				)}
-			</Tabs.List>
+			</Tabs.List> */}
 
 			<Tabs.Panel value={'first'}>
 				<Paper shadow='xl' radius='lg' p='md' pt={'lg'}>

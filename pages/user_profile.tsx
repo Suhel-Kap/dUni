@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Layout } from '../components/Layout/Layout';
 import { Stack } from '@mantine/core';
+import { CreateUser } from '../components/CreateUser/CreateUser';
 // import useTableland from "../hooks/useTableland"
 // import {ApolloClient, InMemoryCache, ApolloProvider, gql} from '@apollo/client'
 // import { fetchUserProfile } from "../constants/graphql/queries"
@@ -20,6 +21,9 @@ export default function Home() {
 	const isOwner = address === router.query.address;
 	const [stats, setStats] = useState(defaultStats);
 	const [isPostCountFetched, setIsPostCountFetched] = useState(false);
+
+	const [isUserExist, setIsUserExist] = useState(true);
+
 	// const { getUserData } = useTableland();
 	// const { getLensPostCount } = useContract();
 	// const client = new ApolloClient({
@@ -113,19 +117,29 @@ export default function Home() {
 				{/*}}>*/}
 				{/*    superfluid*/}
 				{/*</button>*/}
-				<Stack m={'sm'} sx={{ height: '100%' }}>
-					<Banner isOwner={isOwner} {...stats} /*profId={profId}*/ />
-					<NavTabs
-						isOwner={isOwner}
-						isPostCountFetched={isPostCountFetched}
-						profId={profId}
-						postCount={
-							stats && stats.stats && stats.stats[2]
-								? stats.stats[2].value
-								: 0
-						}
-					/>
-				</Stack>
+				{isUserExist ? (
+					<Stack m={'sm'} sx={{ height: '100%' }}>
+						<Banner
+							isOwner={isOwner}
+							{...stats} /*profId={profId}*/
+						/>
+						<NavTabs
+							isOwner={isOwner}
+							isPostCountFetched={isPostCountFetched}
+							profId={profId}
+							postCount={
+								stats && stats.stats && stats.stats[2]
+									? stats.stats[2].value
+									: 0
+							}
+						/>
+					</Stack>
+				) : (
+					// <div>user not found</div>
+					<>
+						<CreateUser />
+					</>
+				)}
 			</Layout>
 		</>
 	);
