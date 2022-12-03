@@ -39,15 +39,11 @@ export function CreateCourse({universityId}:any) {
 	const [loading, setLoading] = useState(false);
 	const [active, setActive] = useState(0);
 	const [image, setImage] = useState<File>();
-	const [mainCapsule, setMainCapsule] = useState<File>();
-	const [gallery, setGallery] = useState<File[]>([]);
 	const [members, membersHandlers] = useListState<`0x${string}`>([]);
 	const {createCourse} = useContract();
 	const {address} = useAccount()
 	const {uploadJson, uploadImage} = useNftStorage()
 	const router = useRouter()
-
-	const defaultTypes = ['web', 'native', 'cli'];
 
 	const defaultTags = [
 		'Blockchain',
@@ -68,7 +64,6 @@ export function CreateCourse({universityId}:any) {
 			website: '',
 			description: '',
 			shortDescription: '',
-			youTubeLink: '',
 			tags: [],
 			// type: '',
 			price: 0,
@@ -91,7 +86,7 @@ export function CreateCourse({universityId}:any) {
 			// if (form.validate().hasErrors) {
 			// 	return current;
 			// }
-			return current < 4 ? current + 1 : current;
+			return current < 3 ? current + 1 : current;
 		});
 
 	const prevStep = () =>
@@ -119,18 +114,21 @@ export function CreateCourse({universityId}:any) {
 			});
 			
 			const data = await response.json()
+			console.log("data", data)
 			const playbackId = data.playbackId
-			const streamId = data.streamId
+			const streamId = data.streamKey
 			const imageCid = await uploadImage(image!)
 			const fileId = await uploadJson({
 				name: form.values.displayName,
+				shortDescription: form.values.shortDescription,
 				description: form.values.description,
 				image: imageCid,
+				tags: form.values.tags
 			})
-			
+			console.log(fileId)
 			const id = router.query.id
 			if (typeof id === "string") {
-				const res = await createCourse(parseInt(id), form.values.projectName, finMembers, form.values.price.toString(), fileId, playbackId, streamId);
+				const res = await createCourse(parseInt(id), form.values.projectName, finMembers, fileId, form.values.price.toString(), playbackId, streamId);
 				
 				console.log(res)
 				showNotification({
@@ -138,7 +136,7 @@ export function CreateCourse({universityId}:any) {
 					message: 'Your course has been created',
 				})
 				setLoading(false)
-				router.push("/university?id="+universityId)
+				router.push("/university?id="+id)
 				console.log('submit');
 			}else{
 				console.log("university id is not passed in query params")
@@ -178,7 +176,7 @@ export function CreateCourse({universityId}:any) {
 						<span style={{ color: 'red' }}>*</span>
 					</Title>
 					<NameInput
-						parentId={'fdsfsf'} // TODO: pass the organisation name here
+						parentId={"duni"}
 						required
 						placeholder='Unique Account Name'
 						{...form.getInputProps('projectName')}
@@ -216,19 +214,6 @@ export function CreateCourse({universityId}:any) {
 							</Tooltip>
 						}
 					/>
-					{/* <Title my={'sm'} order={4}>
-						Type
-					</Title>
-					<Select
-						data={defaultTypes}
-						{...form.getInputProps('type')}
-						placeholder='Select Type'
-						nothingFound='Nothing found'
-						searchable
-						creatable
-						getCreateLabel={(query) => `+ Create ${query}`}
-						{...form.getInputProps('type')}
-					/> */}
 					<Title my={'sm'} order={4}>
 						Price
 					</Title>
@@ -318,13 +303,13 @@ export function CreateCourse({universityId}:any) {
 
 			<Group position='right' mt='xl'>
 				{active !== 0 && (
-					<Button variant='default' onClick={prevStep}>
+					<Button disabled={loading} variant='default' onClick={prevStep}>
 						Back
 					</Button>
 				)}
-				{active !== 4 && <Button onClick={nextStep}>Next step</Button>}
-				{active === 4 && (
-					<Button onClick={() => handleSubmit()}>Confirm</Button>
+				{active !== 3 && <Button disabled={loading} onClick={nextStep}>Next step</Button>}
+				{active === 3 && (
+					<Button disabled={loading} onClick={() => handleSubmit()}>Confirm</Button>
 				)}
 			</Group>
 		</>

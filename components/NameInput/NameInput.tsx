@@ -41,7 +41,7 @@ export function NameInput(props: NameInputProps) {
 				},
 			});
 		}
-		if (router.pathname === '/create-project') {
+		if (router.pathname === '/create-course') {
 			setQuery({
 				// @ts-ignore
 				query: gql(`query UniqueProject( $project: String $accountName: String ) { accounts(where: { name: $accountName }) { projects(where: { name_contains: $project }) { id name } } } `),
@@ -52,7 +52,7 @@ export function NameInput(props: NameInputProps) {
 			});
 		}
 	}, [props.value]);
-
+	console.log(query)
 	useEffect(() => {
 		setLoading(false);
 		setExists(false);
