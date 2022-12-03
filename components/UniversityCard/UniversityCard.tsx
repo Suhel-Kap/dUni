@@ -66,11 +66,6 @@ const useStyles = createStyles((theme) => ({
 	},
 }));
 
-const mockdata = [
-	{ label: '450 students enrolled', icon: IconUsers },
-	{ label: '12+ Courses offered', icon: IconBooks },
-	{ label: '20+ PHD Prof.', icon: IconFileCertificate },
-];
 
 interface UniversityCardProps {
 	id: number;
