@@ -17,24 +17,35 @@ import {
 } from '@mantine/core';
 import { useForm, zodResolver } from '@mantine/form';
 import { useListState } from '@mantine/hooks';
+import { showNotification } from '@mantine/notifications';
 import {
 	IconAlertCircle,
 	IconCurrencyEthereum,
 	IconWorldWww,
 } from '@tabler/icons';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { useAccount } from 'wagmi';
+import { CONTRACT_ADDRESS } from '../../constants';
+import { useContract } from '../../hooks/useContract';
+import useNftStorage from '../../hooks/useNftStorage';
 import { AddressInput } from '../AddressInput/AddressInput';
 import { ImageInput } from '../ImageInput/ImageInput';
 import { MemberList } from '../MemberList/MemberList';
 import { NameInput } from '../NameInput/NameInput';
 import { schema } from './schema';
 
-export function CreateCourse() {
+export function CreateCourse({universityId}:any) {
+	const [loading, setLoading] = useState(false);
 	const [active, setActive] = useState(0);
 	const [image, setImage] = useState<File>();
 	const [mainCapsule, setMainCapsule] = useState<File>();
 	const [gallery, setGallery] = useState<File[]>([]);
 	const [members, membersHandlers] = useListState<`0x${string}`>([]);
+	const {createCourse} = useContract();
+	const {address} = useAccount()
+	const {uploadJson, uploadImage} = useNftStorage()
+	const router = useRouter()
 
 	const defaultTypes = ['web', 'native', 'cli'];
 
@@ -87,7 +98,54 @@ export function CreateCourse() {
 		setActive((current) => (current > 0 ? current - 1 : current));
 
 	const handleSubmit = async () => {
-		console.log('submit');
+		setLoading(true)
+		showNotification({
+			title: 'Creating Course',
+			message: 'Please wait while we create your course',
+		})
+		const finMembers = [...members, address!, CONTRACT_ADDRESS]
+		addMember(address!);
+		addMember(CONTRACT_ADDRESS)
+		try {
+			const response = await fetch(`https://livepeer.studio/api/stream`, {
+				method: 'POST',
+				headers: {
+					Authorization: `Bearer ${process.env.NEXT_PUBLIC_STUDIO_API_KEY}`,
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					name: form.values.projectName
+				})
+			});
+			
+			const data = await response.json()
+			const playbackId = data.playbackId
+			const streamId = data.streamId
+			const imageCid = await uploadImage(image!)
+			const fileId = await uploadJson({
+				name: form.values.displayName,
+				description: form.values.description,
+				image: imageCid,
+			})
+			
+			const res = await createCourse(universityId, form.values.projectName, members, form.values.price, fileId, playbackId, streamId);
+			
+			console.log(res)
+			showNotification({
+				title: 'Course Created',
+				message: 'Your course has been created',
+			})
+			setLoading(false)
+			router.push("/university?id="+universityId)
+			console.log('submit');
+		} catch (error) {
+			console.log(error);
+			showNotification({
+				title: 'Error',
+				message: 'There was an error creating your university',
+			})
+			setLoading(false)
+		}
 	};
 
 	return (
