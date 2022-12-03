@@ -15,8 +15,29 @@ import { Layout } from '../components/Layout/Layout';
 import { LiveClassesPannel } from '../components/LiveClassesPannel/LiveClassesPannel';
 import { ProffPannel } from '../components/ProffPannel/ProffPannel';
 import { SubmissionPannel } from '../components/SubmissionPannel/SubmissionPannel';
+import {useRouter} from "next/router";
+import {useAccount} from "wagmi";
+import {useEffect, useState} from "react";
+import {useContract} from "../hooks/useContract";
 
 export default function Home() {
+	const router = useRouter()
+	const {address, status} = useAccount()
+	const {getStudents} = useContract()
+	const [students, setStudents] = useState<any>([])
+	useEffect(() => {
+		if(router.query.id === undefined) return
+		const id = router.query.id
+		console.log("id", id)
+		const getStuds = async () => {
+			const studs = await getStudents(parseInt(id as string))
+			if(!studs.includes(address)) {
+				alert("You are not enrolled in this course")
+				router.push("/home")
+			}
+		}
+		getStuds()
+	}, [router.isReady, router.query,status])
 	return (
 		<>
 			<Layout>

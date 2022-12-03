@@ -14,6 +14,7 @@ import { IconCurrencyEthereum, IconShoppingCartPlus } from '@tabler/icons';
 import Link from 'next/link';
 import { useContract } from '../../hooks/useContract';
 import {useEffect, useState} from "react";
+import {showNotification} from "@mantine/notifications";
 
 const useStyles = createStyles((theme) => ({
 	card: {
@@ -50,7 +51,8 @@ interface CardWithStatsProps {
 
 export function CourseCard(props: any) {
 	const { classes } = useStyles()
-	const {getCourse} = useContract()
+	const [loading, setLoading] = useState(false)
+	const {getCourse, enroll} = useContract()
 	const [data, setData] = useState<any>([])
 	useEffect(() => {
 		const getCourseData = async () => {
@@ -61,28 +63,25 @@ export function CourseCard(props: any) {
 		}
 		getCourseData()
 	}, [props])
-	console.log("CourseCard", data)
 
-	const mockData = {
-		image: 'https://images.unsplash.com/photo-1581889470536-467bdbe30cd0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=720&q=80',
-		title: 'Running challenge',
-		description:
-			'56 km this month • 17% improvement compared to last month • 443 place in global scoreboard',
-		stats: [
-			{
-				title: 'Students Enrolled',
-				value: '785',
-			},
-			{
-				title: 'Total Hrs.',
-				value: '56 hrs',
-			},
-			{
-				title: 'Popularity',
-				value: '8.8/10',
-			},
-		],
-	};
+	const handleClick = async () => {
+		setLoading(true)
+		try {
+			await enroll(props.id, data.price)
+			showNotification({
+				title: 'Success',
+				message: 'You have successfully enrolled in the course',
+			})
+			setLoading(false)
+		} catch (e) {
+			console.log(e)
+			showNotification({
+				title: 'Error',
+				message: 'Something went wrong',
+			})
+			setLoading(false)
+		}
+	}
 
 	const etherIcon = (
 		<ActionIcon size='xs' color='blue' radius='xl' variant='transparent'>
@@ -104,7 +103,7 @@ export function CourseCard(props: any) {
 				</Link>
 				<Group>
 					<Badge size='lg' color='lime' leftSection={etherIcon}>
-						Price : 1350
+						Price : {data.price}
 					</Badge>
 				</Group>
 			</Group>
@@ -114,6 +113,8 @@ export function CourseCard(props: any) {
 			<Card.Section>
 				<Center>
 					<Button
+						onClick={async() => await handleClick()}
+						disabled={loading}
 						variant='subtle'
 						color='indigo'
 						size='md'

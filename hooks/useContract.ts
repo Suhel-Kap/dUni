@@ -73,6 +73,14 @@ export const useContract = () => {
         return await contract.getCourseIds(universityId)
     }
 
+    const getStreamKey = async (courseId: number) => {
+        return await contract.getStreamKey(courseId)
+    }
+
+    const getPlaybackId = async (courseId: number) => {
+        return await contract.getPlaybackId(courseId)
+    }
+
     const getStudentGrade = async (assignmentId: number, student: string) => {
         return await contract.getStudentGrade(assignmentId, student)
     }
@@ -156,7 +164,9 @@ export const useContract = () => {
         getAssignment,
         addUser,
         getAccountHex,
-        getCourseIds
+        getCourseIds,
+        getStreamKey,
+        getPlaybackId
     }
 
 }
