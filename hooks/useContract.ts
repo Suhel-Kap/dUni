@@ -31,7 +31,7 @@ export const useContract = () => {
         return tx.wait()
     }
 
-    const setNftId = async (courseId: number, nftId: number) => {
+    const setNftId = async (courseId: number, nftId: string) => {
         const tx = await contract.setNftId(courseId, nftId)
         return tx.wait()
     }

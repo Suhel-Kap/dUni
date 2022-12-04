@@ -118,17 +118,19 @@ export function SubmissionPannel() {
 	const assignGrade = async(value: number) => {
 		const id = router.query.id
 		console.log("assigning grade", value, assignId.toString(), student, id)
-		// const revise = new Revise({auth: process.env.NEXT_PUBLIC_REVISE_AUTH_TOKEN});
-		// const nftId = await getNftId(parseInt(id), student)
-		// console.log("nftId", nftId)
-		// const nft = await revise.fetchNFT(nftId);
-		// console.log("nft", nft)
-		// const result = await revise.nft(nft)
-		// 					.setProperty(assignTitle, value)
-		// 					.save();
-		// console.log("result", result)
+		const revise = new Revise({auth: process.env.NEXT_PUBLIC_REVISE_AUTH_TOKEN!});
+		// @ts-ignore
+		const nftId = await getNftId(parseInt(id), student)
+		console.log("nftId", nftId)
+		const nft = await revise.fetchNFT(nftId);
+		console.log("nft", nft)
+		const result = await revise.nft(nft)
+							.setProperty("marks", value)
+							.save();
+		console.log("result", result)
+		// @ts-ignore
 		const res = await gradeSubmission(parseInt(id), parseInt(assignId.toString()), student,value)
-		console.log("res", res)
+		// console.log("res", res)
 	}
 
 	const assignments = data.map((item:any) => (

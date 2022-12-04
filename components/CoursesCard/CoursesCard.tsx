@@ -71,10 +71,10 @@ export function CourseCard(props: any) {
 	const handleClick = async () => {
 		setLoading(true)
 		try {
-			// await enroll(props.id, data.price)
-			const tokenId = (await getTokenId(props.id, address)).toString()
+			await enroll(props.id, data.price)
+			const tokenId = (await getTokenId(props.id, address!)).toString()
 			console.log("token id", tokenId)
-			const revise = new Revise({auth: process.env.NEXT_PUBLIC_REVISE_AUTH_TOKEN});
+			const revise = new Revise({auth: process.env.NEXT_PUBLIC_REVISE_AUTH_TOKEN!});
 			console.log("revise", revise)
 			const nft = await revise.addNFT(
 				{
@@ -84,7 +84,7 @@ export function CourseCard(props: any) {
 				  tokenId: tokenId,
 				  description: data.shortDescription,
 				},
-				[],
+				[{ marks: 0 }],
 				collectionId
 			);
 			console.log("nft", nft)
