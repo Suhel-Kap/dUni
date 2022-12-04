@@ -7,6 +7,9 @@ import {
 	Paper,
 	ScrollArea,
 	Table,
+	useMantineTheme,
+	Modal,
+	NumberInput,
 } from '@mantine/core';
 import { IconPencil, IconPlus, IconTarget } from '@tabler/icons';
 import makeBlockie from 'ethereum-blockies-base64';
@@ -16,13 +19,21 @@ import { Container } from 'tabler-icons-react';
 import { useSigner } from 'wagmi';
 import { useContract } from '../../hooks/useContract';
 import { Button } from '../Button/Button';
+import { Revise } from "revise-sdk";
+const revise = new Revise({auth: process.env.NEXT_PUBLIC_REVISE_AUTH_TOKEN});
 
 export function SubmissionPannel() {
 	const {data: signer} = useSigner()
 	const router = useRouter()
-	const {getAssignmentIds, getAssignment, getStudents, getStudentGrades} = useContract()
+	const [assignGradeopened, setAssignGradeOpened] = useState(false);
+	const [value, setValue] = useState(0);
+	const theme = useMantineTheme();
+	const {getAssignmentIds, getAssignment, getStudents, getStudentGrades, gradeSubmission, getNftId} = useContract()
 
 	const [data, setData] = useState<any>([])
+	const [assignId, setAssignId] = useState<any>()
+	const [assignTitle, setAssignTitle] = useState<any>()
+	const [student, setStudent] = useState<any>()
 
 	useEffect(() => {
 		if (router.query.id && signer) {
@@ -50,13 +61,14 @@ export function SubmissionPannel() {
 				const json = await data.json()
 				const title = json.name
 				const result = await getStudentGrades(parseInt(cId), parseInt(id))
-				const marks = result.length > 0 ? result[0].map((student: string, index) => {
+				const marks = result.length > 0 ? result[0].map((student: string, index: number) => {
 					return {
 						address: student,
-						marks: (result[1][index]).toString()
+						grade: (result[1][index]).toString()
 					}
 				}) : []
 				return {
+					id,
 					title,
 					marks
 				}
@@ -103,16 +115,27 @@ export function SubmissionPannel() {
 	// 	},
 	// ];
 
-	const assignments = data.map((item) => (
+	const assignGrade = async(value: number) => {
+		const id = router.query.id
+		const nftId = await getNftId(parseInt(id), student)
+		const nft = await revise.fetchNFT(nftId);
+		const result = await revise.nft(nft)
+							.setProperty(assignTitle, value)
+							.save();
+		const res = await gradeSubmission(parseInt(id), parseInt(assignId), student,value)
+	}
+
+	const assignments = data.map((item:any) => (
 		<>
 			<Accordion.Item value={item.title}>
 				<Accordion.Control>
 					<Title order={4}>{item.title}</Title>
 				</Accordion.Control>
 				<Accordion.Panel>
-					{item.marks.map((mark) => (
+					{item.marks.map((mark:any, index: number) => (
 						<>
 							<Paper
+							key={index}
 								shadow='sm'
 								radius='lg'
 								mt={20}
@@ -169,13 +192,18 @@ export function SubmissionPannel() {
 													</Button>
 												</td>
 												<td>
-													<Button>
+													<Button onClick={()=>{
+														setAssignId(mark.id)
+														setStudent(mark.address)
+														setAssignTitle(item.title)
+														setAssignGradeOpened(true)
+													}}>
 														Assign Grades
 													</Button>
 												</td>
 												<td>
 													<Text size='md'>
-														{mark.grade}
+														{mark.grade == 0 ? 'Not Graded' : mark.grade}
 													</Text>
 												</td>
 											</tr>
@@ -212,6 +240,26 @@ export function SubmissionPannel() {
 			>
 				{assignments}
 			</Accordion>
+
+			
+			<Modal
+				opened={assignGradeopened}
+				onClose={() => setAssignGradeOpened(false)}
+				overlayColor={
+					theme.colorScheme === 'dark'
+						? theme.colors.dark[9]
+						: theme.colors.gray[2]
+				}
+				overlayOpacity={0.55}
+				overlayBlur={3}
+				centered
+			>
+				<NumberInput value={value} onChange={(val: number) => setValue(val)} />
+				<Button onClick={()=>{
+					assignGrade(value)
+				}}>Submit</Button>
+
+			</Modal>
 		</>
 	);
 }

@@ -31,6 +31,11 @@ export const useContract = () => {
         return tx.wait()
     }
 
+    const setNftId = async (courseId: number, nftId: number) => {
+        const tx = await contract.setNftId(courseId, nftId)
+        return tx.wait()
+    }
+
     const addUser = async (accHex: string) => {
         const tx = await contract.addUser(accHex)
         return tx.wait()
@@ -67,6 +72,10 @@ export const useContract = () => {
 
     const getTokenId = async (courseId: number, student: string) => {
         return await contract.getTokenId(courseId, student)
+    }
+
+    const getNftId = async (courseId: number, student: string) => {
+        return await contract.getNftId(courseId, student)
     }
 
     const getCourseIds = async (universityId: number) => {
@@ -142,6 +151,7 @@ export const useContract = () => {
         createCourse,
         addAssignment,
         enroll,
+        setNftId,
         gradeSubmission,
         submitAssignment,
         totalAssignments,
@@ -160,6 +170,7 @@ export const useContract = () => {
         isEnrolled,
         isUniversityAdmin,
         getTokenId,
+        getNftId,
         getCourse,
         getAssignment,
         addUser,

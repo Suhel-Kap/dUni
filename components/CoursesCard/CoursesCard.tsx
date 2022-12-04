@@ -15,6 +15,9 @@ import Link from 'next/link';
 import { useContract } from '../../hooks/useContract';
 import {useEffect, useState} from "react";
 import {showNotification} from "@mantine/notifications";
+import { Revise } from "revise-sdk";
+import { collectionId } from '../../constants';
+import { useAccount } from 'wagmi';
 
 const useStyles = createStyles((theme) => ({
 	card: {
@@ -52,8 +55,9 @@ interface CardWithStatsProps {
 export function CourseCard(props: any) {
 	const { classes } = useStyles()
 	const [loading, setLoading] = useState(false)
-	const {getCourse, enroll} = useContract()
+	const {getCourse, enroll, getTokenId, setNftId} = useContract()
 	const [data, setData] = useState<any>([])
+	const {address} = useAccount()
 	useEffect(() => {
 		const getCourseData = async () => {
 			const course = await getCourse(props.id)
@@ -67,7 +71,24 @@ export function CourseCard(props: any) {
 	const handleClick = async () => {
 		setLoading(true)
 		try {
-			await enroll(props.id, data.price)
+			// await enroll(props.id, data.price)
+			const tokenId = (await getTokenId(props.id, address)).toString()
+			console.log("token id", tokenId)
+			const revise = new Revise({auth: process.env.NEXT_PUBLIC_REVISE_AUTH_TOKEN});
+			console.log("revise", revise)
+			const nft = await revise.addNFT(
+				{
+				  image:
+					`https://${data.image}.ipfs.nftstorage.link`,
+				  name: data.name,
+				  tokenId: tokenId,
+				  description: data.shortDescription,
+				},
+				[],
+				collectionId
+			);
+			console.log("nft", nft)
+			await setNftId(props.id, nft.id)
 			showNotification({
 				title: 'Success',
 				message: 'You have successfully enrolled in the course',
