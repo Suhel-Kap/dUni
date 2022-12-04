@@ -20,12 +20,14 @@ interface CourseInfoPannelProps {
 	courseName: string;
 	image: string;
 	description: string;
+	isTeacher: boolean;
 }
 
 export function CourseInfoPannel({
 	courseName,
 	image,
 	description,
+	isTeacher
 }: CourseInfoPannelProps) {
 	const theme = useMantineTheme();
 	const [opened, setOpened] = useState(false);
@@ -68,17 +70,17 @@ export function CourseInfoPannel({
 					</Grid>
 
 					<Grid gutter='md' mt={0} mx={20} justify='flex-end'>
-						<Button
+						{isTeacher && <Button
 							variant='outline'
 							color='indigo'
 							radius='lg'
 							size='md'
 							mt={20}
-							leftIcon={<IconCamera />}
+							leftIcon={<IconCamera/>}
 							onClick={() => setOpened(true)}
 						>
 							Start Live Class
-						</Button>
+						</Button>}
 
 						<Modal
 							opened={opened}
