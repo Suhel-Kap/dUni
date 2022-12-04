@@ -4,8 +4,7 @@
 
 Our Application is hosted on these links below :
 
--   [Vercel](https://)
--   [Valist](https://)
+-   [Valist](https://bafybeiava433h44etdhf4ulv34hgfz42pol6gveftiyzinbwrd6qmw4zri.ipfs.gateway.valist.io/)
 
 Authors
 
