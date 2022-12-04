@@ -20,7 +20,7 @@ import { useSigner } from 'wagmi';
 import { useContract } from '../../hooks/useContract';
 import { Button } from '../Button/Button';
 import { Revise } from "revise-sdk";
-const revise = new Revise({auth: process.env.NEXT_PUBLIC_REVISE_AUTH_TOKEN});
+
 
 export function SubmissionPannel() {
 	const {data: signer} = useSigner()
@@ -117,12 +117,18 @@ export function SubmissionPannel() {
 
 	const assignGrade = async(value: number) => {
 		const id = router.query.id
-		const nftId = await getNftId(parseInt(id), student)
-		const nft = await revise.fetchNFT(nftId);
-		const result = await revise.nft(nft)
-							.setProperty(assignTitle, value)
-							.save();
-		const res = await gradeSubmission(parseInt(id), parseInt(assignId), student,value)
+		console.log("assigning grade", value, assignId.toString(), student, id)
+		// const revise = new Revise({auth: process.env.NEXT_PUBLIC_REVISE_AUTH_TOKEN});
+		// const nftId = await getNftId(parseInt(id), student)
+		// console.log("nftId", nftId)
+		// const nft = await revise.fetchNFT(nftId);
+		// console.log("nft", nft)
+		// const result = await revise.nft(nft)
+		// 					.setProperty(assignTitle, value)
+		// 					.save();
+		// console.log("result", result)
+		const res = await gradeSubmission(parseInt(id), parseInt(assignId.toString()), student,value)
+		console.log("res", res)
 	}
 
 	const assignments = data.map((item:any) => (
@@ -193,7 +199,7 @@ export function SubmissionPannel() {
 												</td>
 												<td>
 													<Button onClick={()=>{
-														setAssignId(mark.id)
+														setAssignId(item.id)
 														setStudent(mark.address)
 														setAssignTitle(item.title)
 														setAssignGradeOpened(true)
