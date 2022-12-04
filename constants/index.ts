@@ -1,6 +1,6 @@
 import {CONTRACT_ADDRESS} from "./contractAddress"
 import abi from "./abi.json"
-const collectionId = "e6c015d9-9cd3-4e12-9a9b-eb25d4009e7f"
+const collectionId = "1ab53d0a-0ef8-4811-8fd2-72f2b22e328b"
 
 export {
     CONTRACT_ADDRESS,

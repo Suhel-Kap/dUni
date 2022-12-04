@@ -13,8 +13,8 @@ export function LiveClassesPannel() {
 			const id = router.query.id
 			if (typeof id === "string") {
 				const pId = await getPlaybackId(parseInt(id))
-				// setPlaybackId(pId)
-				setPlaybackId("177cwx8nxx5ourku")
+				setPlaybackId(pId)
+				// setPlaybackId("177cwx8nxx5ourku")
 			}
 		})()
 	}, [router.query]);
